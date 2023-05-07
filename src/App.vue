@@ -10,50 +10,62 @@
 </template>
 
 <style lang="sass">
-@font-face
-  font-family: "JosefinSans"
-  src: url("assets/fonts/JosefinSans/JosefinSans-Bold.ttf")
-  font-weight: 700
-  font-style: normal
-  font-display: swap
-@font-face
-  font-family: "JosefinSans"
-  src: url("assets/fonts/JosefinSans/JosefinSans-SemiBold.ttf")
-  font-weight: 600
-  font-style: normal
-  font-display: swap
-@font-face
-  font-family: "JosefinSans"
-  src: url("assets/fonts/JosefinSans/JosefinSans-Medium.ttf")
-  font-weight: 500
-  font-style: normal
-  font-display: swap
-@font-face
-  font-family: "JosefinSans"
-  src: url("assets/fonts/JosefinSans/JosefinSans-Regular.ttf")
-  font-weight: 400
-  font-style: normal
-  font-display: swap
-@font-face
-  font-family: "JosefinSans"
-  src: url("assets/fonts/JosefinSans/JosefinSans-Light.ttf")
-  font-weight: 300
-  font-style: normal
-  font-display: swap
-@font-face
-  font-family: "JosefinSans"
-  src: url("assets/fonts/JosefinSans/JosefinSans-ExtraLight.ttf")
-  font-weight: 200
-  font-style: normal
-  font-display: swap
-@font-face
-  font-family: "JosefinSans"
-  src: url("assets/fonts/JosefinSans/JosefinSans-Thin.ttf")
-  font-weight: 100
-  font-style: normal
-  font-display: swap
-*
-  box-sizing: border-box
-[v-cloak]
-  display: none
+  @font-face
+    font-family: "NotoSans"
+    src: url("assets/fonts/NotoSans/NotoSans-Black.ttf")
+    font-weight: 900
+    font-style: normal
+    font-display: swap
+  @font-face
+    font-family: "NotoSans"
+    src: url("assets/fonts/NotoSans/NotoSans-ExtraBold.ttf")
+    font-weight: 800
+    font-style: normal
+    font-display: swap
+  @font-face
+    font-family: "NotoSans"
+    src: url("assets/fonts/NotoSans/NotoSans-Bold.ttf")
+    font-weight: 700
+    font-style: normal
+    font-display: swap
+  @font-face
+    font-family: "NotoSans"
+    src: url("assets/fonts/NotoSans/NotoSans-SemiBold.ttf")
+    font-weight: 600
+    font-style: normal
+    font-display: swap
+  @font-face
+    font-family: "NotoSans"
+    src: url("assets/fonts/NotoSans/NotoSans-Medium.ttf")
+    font-weight: 500
+    font-style: normal
+    font-display: swap
+  @font-face
+    font-family: "NotoSans"
+    src: url("assets/fonts/NotoSans/NotoSans-Regular.ttf")
+    font-weight: 400
+    font-style: normal
+    font-display: swap
+  @font-face
+    font-family: "NotoSans"
+    src: url("assets/fonts/NotoSans/NotoSans-Light.ttf")
+    font-weight: 300
+    font-style: normal
+    font-display: swap
+  @font-face
+    font-family: "NotoSans"
+    src: url("assets/fonts/NotoSans/NotoSans-ExtraLight.ttf")
+    font-weight: 200
+    font-style: normal
+    font-display: swap
+  @font-face
+    font-family: "NotoSans"
+    src: url("assets/fonts/NotoSans/NotoSans-Thin.ttf")
+    font-weight: 100
+    font-style: normal
+    font-display: swap
+  *
+    box-sizing: border-box
+  [v-cloak]
+    display: none
 </style>
