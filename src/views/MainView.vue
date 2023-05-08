@@ -9,19 +9,20 @@
     />
     <Sidebar
       :sidebar-hidden="sidebarHidden"
-      :notes-type="notesType"
       :theme-info="themeInfo"
-      @toggle-notes-type="toggleNotesType"
     />
     <Container
       :class="{'container_s': !sidebarHidden}"
       :theme="getCurrentTheme"
     >
       <Workflow
-        :notes-type="notesType"
+        v-if="ifRouteIncludes(['assignment', 'workflow'])"
         :theme-info="themeInfo"
         @toggle-overlay="toggleOverlay"
         @toggle-alert="toggleAlert"
+      />
+      <Courses
+        v-if="ifRouteIncludes(['courses'])"
       />
     </Container>
     <Overlay
@@ -43,13 +44,15 @@ import { Body, Container } from "@/styles/styledBlocks.js"
 import Header from '@/components/Header.vue'
 import Sidebar from '@/components/Sidebar.vue'
 import Workflow from '@/components/Workflow.vue'
+import Courses from '@/components/Courses.vue'
 import Overlay from '@/components/Overlay.vue'
 import Alert from '@/components/Alert.vue'
+import { mapMutations } from 'vuex'
 
 export default {
   name: 'MainView',
   components: {
-    Body, Header, Sidebar, Container, Workflow, Overlay, Alert
+    Body, Header, Sidebar, Container, Workflow, Courses, Overlay, Alert
   },
   data() {
     return {
@@ -69,10 +72,10 @@ export default {
         noteTitle: '',
         noteContent: '',
       },
-      notesType: 'normal',
     }
   },
   methods: {
+    ...mapMutations(['CLEAN_CURRENT_COURSE_ID']),
     toggleSidebar() { //opening/closing the overlay
       this.sidebarHidden = !this.sidebarHidden
     },
@@ -82,9 +85,6 @@ export default {
       this.overlayInfo.noteTitle = noteTitle
       this.overlayInfo.noteContent = noteContent
       this.overlayInfo.overlayHidden = !this.overlayInfo.overlayHidden
-    },
-    toggleNotesType(newType) {  //changes notesType variable that leads to changing showed notes type [normal, archived, deleted]
-      this.notesType = newType
     },
     toggleAlert(message = '') { //show/hide alert block
       this.alertInfo.alertMessage = message
@@ -98,15 +98,40 @@ export default {
       this.themeInfo.themeMode = newThemeMode
       this.toggleAlert(`The theme mode was changed to ${newThemeMode}`)
     },
+    ifRouteIncludes(arr) {
+      let res = false,
+          routeName = this.getRoute
+
+      arr.forEach(sbstr => {
+        if (routeName.includes(sbstr))
+          res = true
+      })
+
+      return res
+    },
+    goTo(here) {
+      this.$router.push(here)
+    },
   },
   computed: {
     getCurrentTheme() { //return current theme
       return themes[this.themeInfo.theme][this.themeInfo.themeMode]
     },
+    getRoute() {
+      return this.$route.name
+    },
+  },
+  watch: {
+    $route(to) {
+      if (to.name == "courses")
+        this.CLEAN_CURRENT_COURSE_ID()
+    }
   },
   provide() { //provide current theme for all components
     return {
       theme: computed(() => this.getCurrentTheme),
+      ifRouteIncludes: this.ifRouteIncludes,
+      goTo: this.goTo
     }
   },
 }

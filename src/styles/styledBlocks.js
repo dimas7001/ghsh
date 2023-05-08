@@ -66,6 +66,7 @@ export const HeaderBlock = styled.header`
       line-height: 23px;
       font-weight: 800;
       color: ${props => props.theme.highlights};
+      cursor: default;
     }
     &__customize {
       position: relative;
@@ -196,6 +197,10 @@ export const SidebarBlock = styled.div`
         background-color: ${props => props.theme.highlights + '33'};
         transition: .2s all;
       }
+      &_inactive {
+        opacity: .35;
+        pointer-events: none;
+      }
       &:hover {
         background-color: ${props => props.theme.highlights + '1a'};
         transition: .2s all;
@@ -285,10 +290,9 @@ export const NewNoteBlock = styled.div`
 export const WorkflowBlock = styled.section`
   margin: 0;
   padding: 30px 0;
-  overflow: visible;
   .wf-item {
     padding: 15px 10px;
-    /* cursor: pointer; */
+    cursor: pointer;
     &:hover {
       box-shadow: 0 0 5px 1px ${props => props.theme.highlights + '80'};
       transition: .2s all;
@@ -322,6 +326,37 @@ export const WorkflowBlock = styled.section`
       white-space: pre-wrap;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
+    }
+  }
+`;
+
+export const CoursesBlock = styled.section`
+  margin: 0;
+  padding: 30px 0;
+  .course {
+    margin-top: 15px;
+    padding: 10px 10px 10px 20px;
+    border-left: 4px solid transparent;
+    cursor: pointer;
+    &:hover {
+      border-left-color: ${props => props.theme.highlights};
+      background-color: ${props => props.theme.highlights + '1a'};
+      transition: .2s all;
+    }
+    + .course__no-items {
+      display: none;
+    }
+    &s__wrapper {
+      padding-top: 10px;
+    }
+    &__name {
+      font-size: 25px;
+      line-height: 32px;
+      font-weight: 600;
+    }
+    &__no-items {
+      margin-top: 10px;
+      text-align: center;
     }
   }
 `;

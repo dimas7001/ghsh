@@ -2,18 +2,23 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
   {
-    path: '/workflow',
+    path: '/',
+    name: 'courses',
+    component: () => import('../views/MainView.vue')
+  },
+  {
+    path: '/:courseID/workflow',
     name: 'workflow',
     component: () => import('../views/MainView.vue')
   },
   {
-    path: '/assignment',
+    path: '/:courseID/assignment',
     redirect: to => {
       return { path: '/workflow' }
     }
   },
   {
-    path: '/assignment/:id',
+    path: '/:courseID/assignment/:assignmentID',
     name: 'assignment',
     component: () => import('../views/EnterView.vue'),
   },

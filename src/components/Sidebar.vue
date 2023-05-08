@@ -18,36 +18,55 @@
       <div class="sidebar__group">
         <div
           class="sidebar__item"
-          :class="{'sidebar__item_active': notesType === 'normal'}"
-          @click="$emit('toggle-notes-type', 'normal')"
+          :class="{'sidebar__item_active': ifRouteIncludes(['courses'])}"
+          @click="goTo({ name: 'courses' })"
         >
           <img
-            :src="require(`@/assets/img/icons/notes/notes_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
             class="sidebar__icon"
+            :src="require(`@/assets/img/icons/notes/notes_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
           >
           <div class="sidebar__label">All Courses</div>
         </div>
         <div class="sidebar__separator"></div>
         <div
           class="sidebar__item"
-          :class="{'sidebar__item_active': notesType === 'archived'}"
-          @click="$emit('toggle-notes-type', 'archived')"
+          :class="{
+            'sidebar__item_active': ifRouteIncludes(['workflow', 'assignment']),
+            'sidebar__item_inactive': !getCurrentCourseID
+          }"
+          @click="goTo({ name: 'courses' })"
         >
           <img
-            :src="require(`@/assets/img/icons/workflow/workflow_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
             class="sidebar__icon"
+            :src="require(`@/assets/img/icons/workflow/workflow_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
           >
           <div class="sidebar__label">Workflow</div>
         </div>
-        <div class="sidebar__item"
-          :class="{'sidebar__item_active': notesType === 'deleted'}"
-          @click="$emit('toggle-notes-type', 'deleted')"
+        <div
+          class="sidebar__item"
+          :class="{
+            'sidebar__item_active': ifRouteIncludes(['students']),
+            'sidebar__item_inactive': !getCurrentCourseID
+          }"
         >
           <img
             :src="require(`@/assets/img/icons/people/people_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
             class="sidebar__icon"
           >
           <div class="sidebar__label">Students</div>
+        </div>
+        <div
+          class="sidebar__item"
+          :class="{
+            'sidebar__item_active': ifRouteIncludes(['statistics']),
+            'sidebar__item_inactive': !getCurrentCourseID
+          }"
+        >
+          <img
+            :src="require(`@/assets/img/icons/statistics/statistics_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
+            class="sidebar__icon"
+          >
+          <div class="sidebar__label">Statistics</div>
         </div>
       </div>
       <div class="sidebar__group">
@@ -66,6 +85,7 @@
 
 <script>
 import { SidebarBlock } from "@/styles/styledBlocks.js"
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Sidebar',
@@ -74,10 +94,13 @@ export default {
   },
   props: {
     sidebarHidden: Boolean,
-    notesType: String,
     themeInfo: Object,
   },
-  emits: ['toggle-notes-type'],
-  inject: ['theme'],
+  inject: ['theme', 'ifRouteIncludes', 'goTo'],
+  methods: {
+  },
+  computed: {
+    ...mapGetters(['getCurrentCourseID']),
+  },
 }
 </script>

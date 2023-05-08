@@ -2,6 +2,8 @@ import { createStore } from 'vuex';
 
 export default createStore({
   state: {
+    activeSection: "",
+    currentCourseID: "",
     assignments: [
       {
         id: 'ta43142',
@@ -23,54 +25,38 @@ export default createStore({
         name: "Task 4",
         description: "Oarfish drum marblefish luminous hake Reedfish slender snipe eel alewife longneck eel mustache triggerfish cow shark slender barracudina!",
       },
+    ],
+    courses: [
+      {
+        id: 'co23742',
+        name: 'Course 1'
+      },
+      {
+        id: 'co23752',
+        name: 'Course 2'
+      },
     ]
   },
   getters: {
     getAssignments(state) {
       return state.assignments;
     },
+    getCourses(state) {
+      return state.courses;
+    },
+    getCurrentCourseID(state) {
+      return state.currentCourseID;
+    },
     idExists: state => id =>   //check if map with specific id exists
       state.notes.map(({ id }) => id).includes(id)
     ,
   },
   mutations: {
-    ADD_NOTE(state, payload) {  //add new note to notes object
-      state.notes.push({
-        id: payload.id,
-        title: payload.title,
-        content: payload.content,
-        archived: false,
-        inBin: false
-      });
+    ADD_CURRENT_COURSE_ID(state, id) {
+      state.currentCourseID = id
     },
-    EDIT_NOTE(state, editedNote) { //edit existing note
-      state.notes.forEach(note => {
-        if (note.id === editedNote.id) {
-          note.title = editedNote.title;
-          note.content = editedNote.content;
-          return;
-        }
-      });
-    },
-    //delete note with specific id from notes object
-    DELETE_NOTE(state, id) {
-      state.notes = state.notes.filter(note => note.id !== id);
-    },
-    //change archived property of note with specific id to true
-    MOVE_TO_ARCHIVE(state, id) {
-      state.notes.find(note => note.id == id).archived = true;
-    },
-    //change inBin property of note with specific id to true
-    MOVE_TO_BIN(state, id) {
-      state.notes.find(note => note.id == id).inBin = true;
-    },
-    //change archived property of note with specific id to false
-    MOVE_OUT_ARCHIVE(state, id) {
-      state.notes.find(note => note.id == id).archived = false;
-    },
-    //change inBin property of note with specific id to false
-    MOVE_OUT_BIN(state, id) {
-      state.notes.find(note => note.id == id).inBin = false;
+    CLEAN_CURRENT_COURSE_ID(state) {
+      state.currentCourseID = ""
     },
   }
 });

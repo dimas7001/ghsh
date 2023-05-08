@@ -16,7 +16,7 @@
       <div
         class="wf-item__wrapper"
         v-for="assignment in getAssignments"
-        @click="goToAssignment(assignment.id)"
+        @click="goTo({ name: 'assignment', params: { assignmentID: `${assignment.id}` } })"
         :key="assignment.id"
       >
         <div
@@ -44,16 +44,15 @@ import NewNote from '@/components/NewNote.vue'
 import { mapGetters, mapMutations } from 'vuex'
 
 export default {
-  name: 'Notes',
+  name: 'Workflow',
   components: {
     SearchBlock, WorkflowBlock, TitleBlock, NewNote
   },
   props: {
-    notesType: String,
     themeInfo: Object,
   },
   emits: ['toggle-overlay', 'toggle-alert'],
-  inject: ['theme'],
+  inject: ['theme', 'goTo'],
   data() {
     return ({
       searchValue: '',
@@ -64,9 +63,6 @@ export default {
     ...mapMutations([ //vuex mutations helper
       
     ]),
-    goToAssignment(id) {
-      this.$router.push({ name: 'assignment', params: { id: `${id}` } })
-    },
     openControls(id) {  //open controls of note with specific id
       document.getElementById(id).classList.toggle('note_controls-mode')
     },
