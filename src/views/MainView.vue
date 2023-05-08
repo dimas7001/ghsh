@@ -17,7 +17,7 @@
       :class="{'container_s': !sidebarHidden}"
       :theme="getCurrentTheme"
     >
-      <Notes
+      <Workflow
         :notes-type="notesType"
         :theme-info="themeInfo"
         @toggle-overlay="toggleOverlay"
@@ -42,14 +42,14 @@ import themes from '@/styles/themes.js'
 import { Body, Container } from "@/styles/styledBlocks.js"
 import Header from '@/components/Header.vue'
 import Sidebar from '@/components/Sidebar.vue'
-import Notes from '@/components/Notes.vue'
+import Workflow from '@/components/Workflow.vue'
 import Overlay from '@/components/Overlay.vue'
 import Alert from '@/components/Alert.vue'
 
 export default {
   name: 'MainView',
   components: {
-    Body, Header, Sidebar, Container, Notes, Overlay, Alert
+    Body, Header, Sidebar, Container, Workflow, Overlay, Alert
   },
   data() {
     return {

@@ -29,7 +29,7 @@
         <div class="header__customize">
           <img
             class="header__customize-img"
-            :src="require(`@/assets/img/pantone/pantone_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
+            :src="require(`@/assets/img/icons/pantone/pantone_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
           >
           <div class="header__dropdown">
             <div
@@ -51,17 +51,17 @@
         </div>
         <img
           v-if="themeInfo.themeMode === 'dark'"
-          :src="require(`@/assets/img/sun/sun_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
+          :src="require(`@/assets/img/icons/sun/sun_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
           @click="$emit('update-theme-mode', 'light')"
         >
         <img
           v-else
-          :src="require(`@/assets/img/moon/moon_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
+          :src="require(`@/assets/img/icons/moon/moon_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
           @click="$emit('update-theme-mode', 'dark')"
         >
         <img
-          class="header__logout"
-          :src="require(`@/assets/img/logout/logout_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
+          class="header__settings"
+          :src="require(`@/assets/img/icons/gear/gear_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
         >
       </div>
     </ContainerHeader>

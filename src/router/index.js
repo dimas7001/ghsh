@@ -2,10 +2,20 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
-    //lasy-load used for all components
+    path: '/workflow',
+    name: 'workflow',
     component: () => import('../views/MainView.vue')
+  },
+  {
+    path: '/assignment',
+    redirect: to => {
+      return { path: '/workflow' }
+    }
+  },
+  {
+    path: '/assignment/:id',
+    name: 'assignment',
+    component: () => import('../views/EnterView.vue'),
   },
   {
     path: '/login',
@@ -16,7 +26,12 @@ const routes = [
     path: '/registration',
     name: 'registration',
     component: () => import('../views/EnterView.vue')
-  }
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: () => import('../components/NotFound.vue')
+  },
 ];
 
 const router = createRouter({

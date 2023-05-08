@@ -167,6 +167,9 @@ export const SidebarBlock = styled.div`
     position: fixed;
     top: 60px;
     left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     width: 210px;
     height: calc(100vh - 60px);
     padding: 40px 11px 30px 11px;
@@ -189,7 +192,7 @@ export const SidebarBlock = styled.div`
       border-radius: 15px;
       transition: .2s all;
       cursor: pointer;
-      &_active{
+      &_active {
         background-color: ${props => props.theme.highlights + '33'};
         transition: .2s all;
       }
@@ -218,6 +221,12 @@ export const SidebarBlock = styled.div`
       margin: 20px 0;
     }
   }
+`;
+
+export const TitleBlock = styled.h1`
+  font-size: 35px;
+  line-height: 45px;
+  margin: 8px 0 30px;
 `;
 
 export const SearchBlock = styled.input`
@@ -273,140 +282,46 @@ export const NewNoteBlock = styled.div`
   }
 `;
 
-export const NotesBlock = styled.section`
-  position: relative;
-  column-width: 200px;
-  column-gap: 20px;
+export const WorkflowBlock = styled.section`
   margin: 0;
   padding: 30px 0;
   overflow: visible;
-  .note {
-    position: relative;
-    padding: 20px 10px;
-    border: 1px solid ${props => props.theme.highlights + 'd9'};
-    border-radius: 8px;
-    transition: .25s all;
-    overflow: hidden;
-    &_controls-mode {
-      padding: 35px 10px 5px;
-      transition: .25s all;
-      .note__controls {
-        right: 5px;
-        transition: .25s all;
-        .note__more {
-          cursor: default; 
-          & > div {
-            background-color: transparent;
-            transition: .1s all;
-          }
-        } 
-      }
-    }
+  .wf-item {
+    padding: 15px 10px;
+    /* cursor: pointer; */
     &:hover {
       box-shadow: 0 0 5px 1px ${props => props.theme.highlights + '80'};
       transition: .2s all;
-      .note__controls {
-        clip: auto
-      }
     }
-    &__wrapper {
-      min-width: 150px;
-      max-width: 250px;
-      padding: 5px 0;
-      break-inside: avoid-column;
-      & + .note__no-notes{
+    &__group {
+      padding-bottom: 10px;
+      + .wf-item__group {
+        padding-top: 10px;
+        border-top: 2px solid ${props => props.theme.highlights};
+      }
+      + .wf-item__no-items {
         display: none;
       }
     }
-    &__title {
-      font-size: 18px;
-      line-height: 22px;
+    &__wrapper {
+      padding: 10px 0;
+      + .wf-item__wrapper {
+        border-top: 1px dashed ${props => props.theme.secondary};
+      }
+    }
+    &__name {
+      font-size: 20px;
+      line-height: 26px;
       font-weight: 600;
-      & + .note__content {
-        margin-top: 10px
-      }
     }
-    &__content{
+    &__descr {
+      display: -webkit-box;
+      max-height: 35px;
+      margin-top: 10px;
+      overflow: hidden;
       white-space: pre-wrap;
-    }
-    &__controls {
-      position: absolute;
-      min-width: 120px;
-      top: 3px;
-      right: -90px;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      clip: rect(0 0 0 0);
-      transition: .25s all;
-      cursor: default;
-      & > div {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        width: 25px;
-        height: 25px;
-        background-color: ${props => props.theme.highlights + '4d'};
-        border-radius: 50%;
-        cursor: pointer;
-        transition: .2s all;
-        & > img {
-          max-width: 13px;
-          max-height: 13px;
-        }
-      }
-      & > div + div {
-        margin-left: 7px;
-      }
-      .note {
-        &__edit,
-        &__archive {
-          &_hidden {
-            display: none;
-          }
-        }
-      }
-    }
-    &__edit > img {
-      max-width: 12px !important;
-      max-height: 12px !important;
-    }
-    &__more {
-      margin-right: 5px;
-      background-color: transparent !important;
-      & > div {
-        position: relative;
-        height: 4px;
-        width: 4px;
-        background-color: ${props => props.theme.highlights};
-        border-radius: 50%;
-        transition: .1s all;
-        &::before,
-        &::after {
-          content: '';
-          display: block;
-          height: 4px;
-          width: 4px;
-          position: absolute;
-          top: 0;
-          background-color: inherit;
-          border-radius: 50%;
-        }
-        &::before {
-          left: -7px;
-        }
-        &::after {
-          right: -7px;
-        }
-      }
-    }
-    &__no-notes{
-      position: absolute;
-      width: 100%;
-      margin-top: 20px;
-      text-align: center;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
     }
   }
 `;
