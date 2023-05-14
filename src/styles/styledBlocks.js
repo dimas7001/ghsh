@@ -291,11 +291,15 @@ export const WorkflowBlock = styled.section`
   margin: 0;
   padding: 30px 0;
   .wf-item {
+    position: relative;
     padding: 15px 10px;
     cursor: pointer;
     &:hover {
       box-shadow: 0 0 5px 1px ${props => props.theme.highlights + '80'};
       transition: .2s all;
+      .wf-item__controls {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      }
     }
     &__group {
       padding-bottom: 10px;
@@ -327,6 +331,47 @@ export const WorkflowBlock = styled.section`
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
     }
+    &__controls {
+      position: absolute;
+      top: 7px;
+      right: 7px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+      transition: .1s all;
+      cursor: default;
+      > div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30px;
+        height: 30px;
+        background-color: #0000004d;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: .1s all;
+        > img {
+          max-width: 16px;
+          max-height: 16px;
+        }
+      }
+      > div + div {
+        margin-left: 7px;
+      }
+      .wf-item {
+        &__edit,
+        &__delete {
+          &_hidden {
+            display: none;
+          }
+        }
+      }
+    }
+    &__edit > img {
+      max-width: 12px !important;
+      max-height: 12px !important;
+    }
   }
 `;
 
@@ -357,6 +402,105 @@ export const CoursesBlock = styled.section`
     &__no-items {
       margin-top: 10px;
       text-align: center;
+    }
+  }
+`;
+
+export const LoginBlock = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  .login {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 40vw;
+    min-width: 300px;
+    max-width: 450px;
+    padding: 30px 25px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px 1px #00000080;
+    &__form {
+      display: flex;
+      flex-direction: column;
+      justify-content: stretch;
+      align-items: center;
+      width: 100%;
+    }
+    &__password {
+      margin-top: 15px;
+    }
+    &__submit,
+    &__registration {
+      width: fit-content;
+      margin: 0 auto;
+      padding: 5px 15px;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 21px;
+      color: #353535;
+      background-color: #0000001a;
+      text-align: center;
+      border-radius: 5px;
+      transition: .1s all;
+      cursor: pointer;
+      &_inactive {
+        background-color: transparent;
+        opacity: .5;
+        transition: .1s all;
+        pointer-events: none;
+      }
+      &:hover {
+        color: #ffffff;
+        background-color: #00000099;
+        transition: .1s all;
+      }
+    }
+    &__submit {
+      margin: 20px auto 0;
+    }
+    &__or {
+      position: relative;
+      margin: 15px 0 25px;
+      ::before,
+      ::after {
+        content: '';
+        position: absolute;
+        top: 60%;
+        display: block;
+        width: 50px;
+        height: 1px;
+        background-color: #353535;
+      }
+      ::before {
+        right: calc(100% + 13px);
+      }
+      ::after {
+        left: calc(100% + 13px);
+      }
+    }
+    input {
+      width: 100%;
+      padding: 10px 5px;
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 23px;
+      color: #353535;
+      background-color: #ffffff;
+      border-radius: 8px 8px 4px 4px;
+      border-color: transparent;
+      border-bottom-color: #353535;
+      outline: none;
+      white-space: pre-wrap;
+      transition: .05s all;
+      &:focus {
+        background-color: #0000001a;
+        border-bottom-color: #000000;
+        transition: .05s all;
+      }
     }
   }
 `;

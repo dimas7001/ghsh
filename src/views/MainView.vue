@@ -74,9 +74,10 @@ export default {
       },
     }
   },
+  inject: ['ifRouteIncludes', 'goTo'],
   methods: {
     ...mapMutations(['CLEAN_CURRENT_COURSE_ID']),
-    toggleSidebar() { //opening/closing the overlay
+    toggleSidebar() { //opening/closing the sidebar
       this.sidebarHidden = !this.sidebarHidden
     },
     toggleOverlay(mode = 'add', noteID = '', noteTitle = '', noteContent = '') {  //opens/closes an overlay with passing note data if mode = edit
@@ -98,27 +99,10 @@ export default {
       this.themeInfo.themeMode = newThemeMode
       this.toggleAlert(`The theme mode was changed to ${newThemeMode}`)
     },
-    ifRouteIncludes(arr) {
-      let res = false,
-          routeName = this.getRoute
-
-      arr.forEach(sbstr => {
-        if (routeName.includes(sbstr))
-          res = true
-      })
-
-      return res
-    },
-    goTo(here) {
-      this.$router.push(here)
-    },
   },
   computed: {
     getCurrentTheme() { //return current theme
       return themes[this.themeInfo.theme][this.themeInfo.themeMode]
-    },
-    getRoute() {
-      return this.$route.name
     },
   },
   watch: {
@@ -127,11 +111,9 @@ export default {
         this.CLEAN_CURRENT_COURSE_ID()
     }
   },
-  provide() { //provide current theme for all components
+  provide() {
     return {
-      theme: computed(() => this.getCurrentTheme),
-      ifRouteIncludes: this.ifRouteIncludes,
-      goTo: this.goTo
+      theme: computed(() => this.getCurrentTheme)
     }
   },
 }

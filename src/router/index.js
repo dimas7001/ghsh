@@ -14,7 +14,7 @@ const routes = [
   {
     path: '/:courseID/assignment',
     redirect: to => {
-      return { path: '/workflow' }
+      return { name: 'workflow' }
     }
   },
   {

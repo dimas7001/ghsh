@@ -74,7 +74,7 @@ export default {
       return 'n' + Math.floor( Math.random() * ( max - min + 1 ) + min )
     },
     ...mapMutations([ //vuex mutations helper
-      'ADD_NOTE', 'EDIT_NOTE'
+      'ADD_NOTE', 'EDIT_ASSIGNMENT'
     ]),
     saveNote() {  //updates store.notes with data filled in form
       if (this.overlayInfo.overlayMode === 'add') { //if overlay was opened with 'add' mode
@@ -102,10 +102,10 @@ export default {
       }
       else if (this.overlayInfo.overlayMode === 'edit') { //if overlay was opened with 'edit' mode
         if (this.noteTitle || this.noteContent) { //if at least one of form fields not empty
-          this.EDIT_NOTE({  //emit store mutation with new data for existing note
+          this.EDIT_ASSIGNMENT({  //emit store mutation with new data for existing note
             id: this.overlayInfo.noteID,
-            title: this.noteTitle,
-            content: this.noteContent,
+            name: this.noteTitle,
+            description: this.noteContent,
           })
           this.$emit('toggle-alert', 'Changes are saved') //alert of success
           this.$emit('toggle-overlay')

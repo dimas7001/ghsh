@@ -16,7 +16,7 @@
       <div
         class="wf-item__wrapper"
         v-for="assignment in getAssignments"
-        @click="goTo({ name: 'assignment', params: { assignmentID: `${assignment.id}` } })"
+        @click.self="goTo({ name: 'assignment', params: { assignmentID: `${assignment.id}` } })"
         :key="assignment.id"
       >
         <div
@@ -31,6 +31,26 @@
             class="wf-item__descr"
             v-html="assignment.description"
           ></div>
+            <div class="wf-item__controls">
+              <div
+              class="wf-item__edit"
+              @click="$emit('toggle-overlay', 'edit', assignment.id, assignment.name, assignment.description)"
+            >
+              <img
+                :src="require(`@/assets/img/icons/edit/edit_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
+                alt="edit"
+              >
+            </div>
+            <div
+              class="wf-item__delete"
+              @click="deleteAssignment(assignment.id)"
+            >
+              <img
+                :src="require(`@/assets/img/icons/delete/delete_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
+                alt="delete"
+              >
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -55,41 +75,18 @@ export default {
   inject: ['theme', 'goTo'],
   data() {
     return ({
-      searchValue: '',
-      notesWasHidden: false,  //flag if any notes were hidden by search
+
     })
   },
   methods: {
-    ...mapMutations([ //vuex mutations helper
-      
-    ]),
-    openControls(id) {  //open controls of note with specific id
-      document.getElementById(id).classList.toggle('note_controls-mode')
-    },
-    closeControls(id) { //close controls of note with specific id
-      let element = document.querySelector(`.note_controls-mode#${id}`)
-      if (element)
-        element.classList.toggle('note_controls-mode')
-    },
-    filterNotes() { //filter currently shown notes based on searchValue
-      let searchValueLC = this.searchValue.toLowerCase()
-      document.querySelectorAll('.note__wrapper').forEach(note => {
-        let title = note.querySelector('.note__title').textContent.toLowerCase()
-        let content = note.querySelector('.note__content').textContent.toLowerCase()
-        if (!title.includes(searchValueLC) && !content.includes(searchValueLC)) { //if title or content of note don't have searchValue
-          note.style.display = 'none' //hide note
-          if (!this.notesWasHidden) //if no notes was hidden yet
-            this.notesWasHidden = true
-        }
-      })
-    },
-    showHiddenNotes() { //shows all hidden by search notes
-      document.querySelectorAll('.note__wrapper[style="display: none;"]').forEach(note => note.removeAttribute('style'))
-      this.notesWasHidden = false
+    ...mapMutations(['DELETE_ASSIGNMENT']),
+    deleteAssignment(id) {
+      // $emit('ask-question', 'Do you really want to delete this assignment?', this.DELETE_ASSIGNMENT)
+      this.DELETE_ASSIGNMENT(id)
     }
   },
   computed: {
-    ...mapGetters(['getAssignments']), //vuex getters helper
+    ...mapGetters(['getAssignments']),
   },
   watch: {
     $props: {

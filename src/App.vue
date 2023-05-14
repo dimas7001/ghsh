@@ -9,6 +9,39 @@
   <router-view />
 </template>
 
+<script>
+  // add function that gets values from localStorage, store a complete state in localStorage
+  export default {
+    methods: {
+      ifRouteIncludes(arr) {
+        let res = false,
+            routeName = this.getRoute
+
+        arr.forEach(sbstr => {
+          if (routeName.includes(sbstr))
+            res = true
+        })
+
+        return res
+      },
+      goTo(here) {
+        this.$router.push(here)
+      },
+    },
+    computed: {
+      getRoute() {
+        return this.$route.name
+      },
+    },
+    provide() {
+      return {
+        ifRouteIncludes: this.ifRouteIncludes,
+        goTo: this.goTo
+      }
+    },
+  }
+</script>
+
 <style lang="sass">
   @font-face
     font-family: "NotoSans"

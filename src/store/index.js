@@ -58,5 +58,18 @@ export default createStore({
     CLEAN_CURRENT_COURSE_ID(state) {
       state.currentCourseID = ""
     },
+    EDIT_ASSIGNMENT(state, editedAnssignment) {
+      state.assignments.forEach(assignment => {
+        if (assignment.id === editedAssignment.id) {
+          assignment.name = editedAssignment.name;
+          assignment.description = editedAssignment.description;
+          return;
+        }
+      });
+      state.assignments = state.assignments.filter((assignment) => id !== assignment.id)
+    },
+    DELETE_ASSIGNMENT(state, id) {
+      state.assignments = state.assignments.filter((assignment) => id !== assignment.id)
+    },
   }
 });
