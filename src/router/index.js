@@ -7,20 +7,23 @@ const routes = [
     component: () => import('../views/MainView.vue')
   },
   {
-    path: '/:courseID/workflow',
-    name: 'workflow',
-    component: () => import('../views/MainView.vue')
-  },
-  {
-    path: '/:courseID/assignment',
-    redirect: () => {
-      return { name: 'workflow' }
-    }
-  },
-  {
-    path: '/:courseID/assignment/:assignmentID',
-    name: 'assignment',
+    path: '/course_:courseID',
+    name: 'course',
     component: () => import('../views/MainView.vue'),
+    children: [
+      {
+        path: 'assignment_:assignmentID',
+        name: 'assignment',
+        component: () => import('../views/MainView.vue'),
+        children: [
+          {
+            path: 'answer_:answerID',
+            name: 'answer',
+            component: () => import('../views/MainView.vue'),
+          },
+        ]
+      },
+    ]
   },
   {
     path: '/login',

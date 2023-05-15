@@ -43,7 +43,7 @@ export default {
     ...mapMutations(['ADD_CURRENT_COURSE_ID']),
     goToCourse(id) {
       this.ADD_CURRENT_COURSE_ID(id)
-      this.goTo({ name: 'workflow', params: { courseID: `${id}` } })
+      this.goTo({ name: 'course', params: { courseID: `${id}` } })
     },
   },
   computed: {

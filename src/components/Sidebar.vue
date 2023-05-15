@@ -31,10 +31,10 @@
         <div
           class="sidebar__item"
           :class="{
-            'sidebar__item_active': ifRouteIncludes(['workflow', 'assignment']),
+            'sidebar__item_active': ifRouteIncludes(['course', 'assignment', 'answer']),
             'sidebar__item_inactive': !getCurrentCourseID
           }"
-          @click="goTo({ name: 'courses' })"
+          @click="goTo({ name: 'course' })"
         >
           <img
             class="sidebar__icon"

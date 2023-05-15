@@ -18,7 +18,7 @@
             routeName = this.getRoute
 
         arr.forEach(sbstr => {
-          if (routeName.includes(sbstr))
+          if (routeName === sbstr)
             res = true
         })
 
