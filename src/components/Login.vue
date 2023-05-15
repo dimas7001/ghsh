@@ -42,6 +42,7 @@
 
 <script>
 import { LoginBlock } from "@/styles/styledBlocks.js"
+import { mapMutations } from 'vuex'
 import { sendPOST } from "@/requests/requests"
 import endpoints from "@/requests/endpoints"
 
@@ -60,10 +61,14 @@ export default {
   },
   inject: ['ifRouteIncludes', 'goTo'],
   methods: {
+    ...mapMutations(['SET_USER_TOKENS']),
     async login() {
       await sendPOST(endpoints.login, {}, this.loginData)
       .then(res => {
-        if (res) this.goTo({ name: 'courses' })
+        if (res) {
+          this.SET_USER_TOKENS(res)
+          this.goTo({ name: 'courses' })
+        }
       })
     }
   },

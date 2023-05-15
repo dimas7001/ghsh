@@ -75,11 +75,12 @@
             name="assignment-answer-file"
             type="file"
             accept="application/pdf"
-            @change="scrapeFileName"
+            @change="submitFile"
           >
           <div
             class="assignment-answer__submit"
             :class="{'assignment-answer__submit_inactive': !formDataEnough}"
+            @click="submitAnswer"
           >Submit ✔</div>
         </div>
       </div>
@@ -169,6 +170,7 @@ import {
   StudentsAnswersBlock
 } from "../styles/styledBlocks.js"
 import { mapGetters } from 'vuex'
+import axios from 'axios'
 
 export default {
   name: 'Assignment',
@@ -268,13 +270,28 @@ export default {
     })
   },
   methods: {
-    scrapeFileName(e) {
-      console.log(e.target)
-      this.assignmentFormData.assignmentFileName = e.target.files[0] ? e.target.files[0].name : ""
+    async submitFile(e) {
+      const file = e.target.files[0];
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      axios.post('http://25.59.188.46:8080/api/v1/student/course/3/task/11/lab/40/upload', formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${this.getAccessToken}`
+        }
+      })
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
     }
   },
   computed: {
-    ...mapGetters(['getAssignment']),
+    ...mapGetters(['getAssignment', 'getAccessToken']),
     currentAssignment() {
       return this.getAssignment(this.$route.params.assignmentID)
     },

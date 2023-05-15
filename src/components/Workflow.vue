@@ -3,6 +3,11 @@
     :theme="theme"
   >
     <TitleBlock>Course Title</TitleBlock>
+    <!-- <div class="wf-item__group">
+      <div
+        @click="downloadFile"
+      >click to save</div>
+    </div> -->
     <div class="wf-item__group">
       <div
         class="wf-item__wrapper"
@@ -54,8 +59,8 @@
 
 <script>
 import { SearchBlock, WorkflowBlock, TitleBlock, Controls } from "../styles/styledBlocks.js"
-import NewNote from '@/components/NewNote.vue'
 import { mapGetters, mapMutations } from 'vuex'
+import axios from 'axios'
 
 export default {
   name: 'Workflow',
@@ -77,10 +82,27 @@ export default {
     deleteAssignment(id) {
       // $emit('ask-question', 'Do you really want to delete this assignment?', this.DELETE_ASSIGNMENT)
       this.DELETE_ASSIGNMENT(id)
-    }
+    },
+    async downloadFile() {
+      axios({
+        url: 'http://25.59.188.46:8080/api/v1/student/courses/1/task/1/download',
+        method: 'GET',
+        headers: {"Authorization": `Bearer ${this.getAccessToken}`},
+        responseType: 'blob',
+      }).then((response) => {
+        var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+        var fileLink = document.createElement('a');
+      
+        fileLink.href = fileURL;
+        fileLink.setAttribute('download', 'file.docx');
+        document.body.appendChild(fileLink);
+      
+        fileLink.click();
+      })
+    },
   },
   computed: {
-    ...mapGetters(['getAssignments']),
+    ...mapGetters(['getAssignments', 'getAccessToken']),
   },
   watch: {
     $props: {
