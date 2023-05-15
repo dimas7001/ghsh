@@ -15,14 +15,18 @@
       :class="{'container_s': !sidebarHidden}"
       :theme="getCurrentTheme"
     >
+      <Courses
+        v-if="ifRouteIncludes(['courses'])"
+      />
       <Workflow
-        v-if="ifRouteIncludes(['assignment', 'workflow'])"
+        v-if="ifRouteIncludes(['workflow'])"
         :theme-info="themeInfo"
         @toggle-overlay="toggleOverlay"
         @toggle-alert="toggleAlert"
       />
-      <Courses
-        v-if="ifRouteIncludes(['courses'])"
+      <Assignment
+        v-if="ifRouteIncludes(['assignment'])"
+        :theme-info="themeInfo"
       />
     </Container>
     <Overlay
@@ -43,8 +47,9 @@ import themes from '@/styles/themes.js'
 import { Body, Container } from "@/styles/styledBlocks.js"
 import Header from '@/components/Header.vue'
 import Sidebar from '@/components/Sidebar.vue'
-import Workflow from '@/components/Workflow.vue'
 import Courses from '@/components/Courses.vue'
+import Workflow from '@/components/Workflow.vue'
+import Assignment from '@/components/Assignment.vue'
 import Overlay from '@/components/Overlay.vue'
 import Alert from '@/components/Alert.vue'
 import { mapMutations } from 'vuex'
@@ -52,7 +57,7 @@ import { mapMutations } from 'vuex'
 export default {
   name: 'MainView',
   components: {
-    Body, Header, Sidebar, Container, Workflow, Courses, Overlay, Alert
+    Body, Header, Sidebar, Container, Courses, Workflow, Assignment, Overlay, Alert
   },
   data() {
     return {

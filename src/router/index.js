@@ -13,14 +13,14 @@ const routes = [
   },
   {
     path: '/:courseID/assignment',
-    redirect: to => {
+    redirect: () => {
       return { name: 'workflow' }
     }
   },
   {
     path: '/:courseID/assignment/:assignmentID',
     name: 'assignment',
-    component: () => import('../views/EnterView.vue'),
+    component: () => import('../views/MainView.vue'),
   },
   {
     path: '/login',

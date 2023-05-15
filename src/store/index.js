@@ -41,6 +41,9 @@ export default createStore({
     getAssignments(state) {
       return state.assignments;
     },
+    getAssignment: state => id =>
+      state.assignments.find(assignment => assignment.id === id)
+    ,
     getCourses(state) {
       return state.courses;
     },
@@ -58,7 +61,7 @@ export default createStore({
     CLEAN_CURRENT_COURSE_ID(state) {
       state.currentCourseID = ""
     },
-    EDIT_ASSIGNMENT(state, editedAnssignment) {
+    EDIT_ASSIGNMENT(state, editedAssignment) {
       state.assignments.forEach(assignment => {
         if (assignment.id === editedAssignment.id) {
           assignment.name = editedAssignment.name;

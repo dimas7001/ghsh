@@ -232,6 +232,14 @@ export const TitleBlock = styled.h1`
   font-size: 35px;
   line-height: 45px;
   margin: 8px 0 30px;
+  text-transform: capitalize;
+`;
+
+export const SubtitleBlock = styled.h2`
+  font-size: 20px;
+  line-height: 26px;
+  margin: 0 0 25px;
+  text-transform: capitalize;
 `;
 
 export const SearchBlock = styled.input`
@@ -287,6 +295,36 @@ export const NewNoteBlock = styled.div`
   }
 `;
 
+export const Controls = styled.div`
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  transition: .1s all;
+  cursor: default;
+  > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    background-color: ${props => props.theme.highlights + '4d'};
+    border-radius: 50%;
+    cursor: pointer;
+    transition: .1s all;
+    > img {
+      max-width: 16px;
+      max-height: 16px;
+    }
+  }
+  > div + div {
+    margin-left: 7px;
+  }
+`;
+
 export const WorkflowBlock = styled.section`
   margin: 0;
   padding: 30px 0;
@@ -297,7 +335,7 @@ export const WorkflowBlock = styled.section`
     &:hover {
       box-shadow: 0 0 5px 1px ${props => props.theme.highlights + '80'};
       transition: .2s all;
-      .wf-item__controls {
+      .controls {
         clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
       }
     }
@@ -331,46 +369,18 @@ export const WorkflowBlock = styled.section`
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
     }
-    &__controls {
-      position: absolute;
-      top: 7px;
-      right: 7px;
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
+    .controls {
       clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
-      transition: .1s all;
-      cursor: default;
-      > div {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 30px;
-        height: 30px;
-        background-color: #0000004d;
-        border-radius: 50%;
-        cursor: pointer;
-        transition: .1s all;
-        > img {
-          max-width: 16px;
-          max-height: 16px;
+      &__edit,
+      &__delete {
+        &_hidden {
+          display: none;
         }
       }
-      > div + div {
-        margin-left: 7px;
+      &__edit > img {
+        max-width: 12px !important;
+        max-height: 12px !important;
       }
-      .wf-item {
-        &__edit,
-        &__delete {
-          &_hidden {
-            display: none;
-          }
-        }
-      }
-    }
-    &__edit > img {
-      max-width: 12px !important;
-      max-height: 12px !important;
     }
   }
 `;
@@ -402,6 +412,214 @@ export const CoursesBlock = styled.section`
     &__no-items {
       margin-top: 10px;
       text-align: center;
+    }
+  }
+`;
+
+export const AssignmentBlock = styled.section`
+  padding: 30px 0;
+  border-bottom: 1px solid ${props => props.theme.highlights};
+`;
+
+export const AssignmentAnswerBlock = styled.section`
+  padding: 30px 0 40px;
+  .assignment-answer {
+    &__form {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+    &__group {
+      display: flex;
+      flex-direction: column;
+      &_submit {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+      + .assignment-answer__group {
+        margin-top: 20px;
+      }
+    }
+    &__label,
+    &__title {
+      font-size: 16px;
+      line-height: 20px;
+      font-weight: 500;
+      margin-bottom: 10px;
+      cursor: pointer;
+      &_file {
+        display: flex;
+        flex-direction: column;
+        img {
+          width: 40px;
+          margin-right: 10px;
+        }
+      }
+    }
+    &__title {
+      margin-bottom: 0;
+      line-height: 20px;
+      margin-right: 15px;
+      padding-right: 15px;
+      border-right: 1px solid ${props => props.theme.highlights};
+    }
+    &__subblock{
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+      font-size: 14px;
+      line-height: 17px;
+    }
+    &__input {
+      width: 100%;
+      padding: 10px 5px;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 14px;
+      color: ${props => props.theme.secondary};
+      background-color: ${props => props.theme.main};
+      border-radius: 8px 8px 4px 4px;
+      border-color: transparent;
+      border-bottom-width: 1px;
+      border-bottom-color: ${props => props.theme.secondary};
+      outline: none;
+      white-space: pre-wrap;
+      transition: .05s all;
+      &_comment {
+        min-height: 80px;
+        overflow: auto;
+        resize: none;
+      }
+      &_file {
+        display: none;
+      }
+      &:focus {
+        background-color: ${props => props.theme.highlights + "1a"};
+        border-bottom-color: ${props => props.theme.highlights};
+        transition: .05s all;
+      }
+    }
+    &__submit {
+      width: fit-content;
+      padding: 7px 20px;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 20px;
+      color: ${props => props.theme.secondary};
+      background-color: ${props => props.theme.highlights + "1a"};
+      text-align: center;
+      border-radius: 5px;
+      transition: .1s all;
+      cursor: pointer;
+      &_inactive {
+        background-color: transparent;
+        opacity: .5;
+        transition: .1s all;
+        pointer-events: none;
+      }
+      &:hover {
+        color: ${props => props.theme.main};
+        background-color: ${props => props.theme.highlights + "99"};
+        transition: .1s all;
+      }
+    }
+    &__submitted {
+      position: relative;
+      &:hover {
+        .controls {
+          clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+      }
+      > * + :not(.controls) {
+        margin-top: 8px;
+      }
+      .controls {
+        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+      }
+    }
+    &__head {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding-right: 44px;
+    }
+    &__link {
+      color: ${props => props.theme.secondary};
+    }
+  }
+`;
+
+export const StudentsAnswersBlock = styled.section`
+  padding: 30px 0 40px;
+  .answer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 10px;
+    cursor: pointer;
+    &:hover {
+      box-shadow: 0 0 5px 1px ${props => props.theme.highlights + '80'};
+      transition: .2s all;
+      .controls {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      }
+    }
+    + .answer {
+      margin-top: 5px;
+    }
+    &__section {
+      &_info {
+        width: 60%;
+      }
+      &_labels {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 5px;
+        width: 30%;
+      }
+      &_grade {
+        width: fit-content;
+        padding-left: 15px;
+      }
+    }
+    &__block {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+    &__title,
+    &__student-info {
+      font-size: 16px;
+      line-height: 20px;
+      font-weight: 500;
+      margin-right: 15px;
+      padding-right: 15px;
+    }
+    &__title {
+      border-right: 1px solid ${props => props.theme.highlights};
+    }
+    &__student-info {
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    &__link {
+      color: ${props => props.theme.secondary};
+    }
+    &__comment {
+      margin-top: 8px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    &__label {
+      width: fit-content;
+      padding: 3px 5px;
+      color: ${props => props.theme.secondary};
+      background-color: ${props => props.theme.highlights + "1a"};
+      border-radius: 5px;
+      transition: .1s all;
     }
   }
 `;

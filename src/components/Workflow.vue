@@ -1,13 +1,4 @@
 <template>
-  <!-- <SearchBlock
-    placeholder="To search please enter at least 3 signs"
-    :theme="theme"
-    v-model="searchValue"
-  /> -->
-  <!-- <NewNote
-    :theme="theme"
-    @click="$emit('toggle-overlay')"
-  /> -->
   <WorkflowBlock
     :theme="theme"
   >
@@ -16,7 +7,7 @@
       <div
         class="wf-item__wrapper"
         v-for="assignment in getAssignments"
-        @click.self="goTo({ name: 'assignment', params: { assignmentID: `${assignment.id}` } })"
+        @click="goTo({ name: 'assignment', params: { assignmentID: `${assignment.id}` } })"
         :key="assignment.id"
       >
         <div
@@ -31,10 +22,13 @@
             class="wf-item__descr"
             v-html="assignment.description"
           ></div>
-            <div class="wf-item__controls">
-              <div
-              class="wf-item__edit"
-              @click="$emit('toggle-overlay', 'edit', assignment.id, assignment.name, assignment.description)"
+          <Controls
+            class="controls"
+            :theme="theme"
+          >
+            <div
+              class="controls__edit"
+              @click.stop="$emit('toggle-overlay', 'edit', assignment.id, assignment.name, assignment.description)"
             >
               <img
                 :src="require(`@/assets/img/icons/edit/edit_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
@@ -42,15 +36,15 @@
               >
             </div>
             <div
-              class="wf-item__delete"
-              @click="deleteAssignment(assignment.id)"
+              class="controls__delete"
+              @click.stop="deleteAssignment(assignment.id)"
             >
               <img
                 :src="require(`@/assets/img/icons/delete/delete_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
                 alt="delete"
               >
             </div>
-          </div>
+          </Controls>
         </div>
       </div>
     </div>
@@ -59,14 +53,14 @@
 </template>
 
 <script>
-import { SearchBlock, WorkflowBlock, TitleBlock } from "../styles/styledBlocks.js"
+import { SearchBlock, WorkflowBlock, TitleBlock, Controls } from "../styles/styledBlocks.js"
 import NewNote from '@/components/NewNote.vue'
 import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'Workflow',
   components: {
-    SearchBlock, WorkflowBlock, TitleBlock, NewNote
+    SearchBlock, WorkflowBlock, TitleBlock, Controls
   },
   props: {
     themeInfo: Object,
