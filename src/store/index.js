@@ -2,6 +2,13 @@ import { createStore } from 'vuex';
 
 export default createStore({
   state: {
+    user: {
+      userTokens: {
+        accessToken: "",
+        refreshToken: "",
+      },
+      userRole: "teacher",
+    },
     activeSection: "",
     currentCourseID: "",
     assignments: [
@@ -38,23 +45,41 @@ export default createStore({
     ]
   },
   getters: {
+    getAccessToken(state) {
+      return state.user.userTokens.accessToken
+    },
+    getRefreshToken(state) {
+      return state.user.userTokens.refreshToken
+    },
+    getUserRole(state) {
+      return state.user.userRole
+    },
     getAssignments(state) {
-      return state.assignments;
+      return state.assignments
     },
     getAssignment: state => id =>
       state.assignments.find(assignment => assignment.id === id)
     ,
     getCourses(state) {
-      return state.courses;
+      return state.courses
     },
     getCurrentCourseID(state) {
-      return state.currentCourseID;
+      return state.currentCourseID
     },
-    idExists: state => id =>   //check if map with specific id exists
-      state.notes.map(({ id }) => id).includes(id)
-    ,
+    // idExists: state => id =>   //check if map with specific id exists
+    //   state.notes.map(({ id }) => id).includes(id)
+    // ,
   },
   mutations: {
+    SET_USER_TOKENS(state, tokens) {
+      state.user.userTokens.accessToken = tokens.access_token
+      state.user.userTokens.refreshToken = tokens.refresh_token
+    },
+    CLEAR_DATA(state) {
+      state.user.userTokens.accessToken = ""
+      state.user.userTokens.refreshToken = ""
+      // and much other data
+    },
     ADD_CURRENT_COURSE_ID(state, id) {
       state.currentCourseID = id
     },

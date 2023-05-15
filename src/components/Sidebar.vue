@@ -18,7 +18,7 @@
       <div class="sidebar__group">
         <div
           class="sidebar__item"
-          :class="{'sidebar__item_active': ifRouteIncludes(['courses'])}"
+          :class="{'sidebar__item_active': ifRouteNameIs(['courses'])}"
           @click="goTo({ name: 'courses' })"
         >
           <img
@@ -31,7 +31,7 @@
         <div
           class="sidebar__item"
           :class="{
-            'sidebar__item_active': ifRouteIncludes(['course', 'assignment', 'answer']),
+            'sidebar__item_active': ifRouteNameIs(['course', 'assignment', 'answer']),
             'sidebar__item_inactive': !getCurrentCourseID
           }"
           @click="goTo({ name: 'course' })"
@@ -45,7 +45,7 @@
         <div
           class="sidebar__item"
           :class="{
-            'sidebar__item_active': ifRouteIncludes(['students']),
+            'sidebar__item_active': ifRouteNameIs(['students']),
             'sidebar__item_inactive': !getCurrentCourseID
           }"
         >
@@ -58,7 +58,7 @@
         <div
           class="sidebar__item"
           :class="{
-            'sidebar__item_active': ifRouteIncludes(['statistics']),
+            'sidebar__item_active': ifRouteNameIs(['statistics']),
             'sidebar__item_inactive': !getCurrentCourseID
           }"
         >
@@ -94,9 +94,8 @@ export default {
   },
   props: {
     sidebarHidden: Boolean,
-    themeInfo: Object,
   },
-  inject: ['theme', 'ifRouteIncludes', 'goTo'],
+  inject: ['theme', 'themeInfo', 'ifRouteNameIs', 'goTo'],
   methods: {
   },
   computed: {

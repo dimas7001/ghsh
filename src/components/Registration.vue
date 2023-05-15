@@ -50,7 +50,7 @@ export default {
       password: '',
     })
   },
-  inject: ['ifRouteIncludes', 'goTo'],
+  inject: ['ifRouteNameIs', 'goTo'],
   methods: {
     login() {
       this.goTo({ name: 'courses' })

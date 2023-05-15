@@ -1,9 +1,9 @@
 <template>
   <Login
-    v-if="ifRouteIncludes(['login'])"
+    v-if="ifRouteNameIs(['login'])"
   />
   <Registration
-    v-if="ifRouteIncludes(['registration'])"
+    v-if="ifRouteNameIs(['registration'])"
   />
 </template>
 
@@ -22,7 +22,7 @@ export default {
       
     }
   },
-  inject: ['ifRouteIncludes', 'goTo'],
+  inject: ['ifRouteNameIs', 'goTo'],
   methods: {
     
   },

@@ -441,8 +441,7 @@ export const AssignmentAnswerBlock = styled.section`
         margin-top: 20px;
       }
     }
-    &__label,
-    &__title {
+    &__label {
       font-size: 16px;
       line-height: 20px;
       font-weight: 500;
@@ -456,13 +455,6 @@ export const AssignmentAnswerBlock = styled.section`
           margin-right: 10px;
         }
       }
-    }
-    &__title {
-      margin-bottom: 0;
-      line-height: 20px;
-      margin-right: 15px;
-      padding-right: 15px;
-      border-right: 1px solid ${props => props.theme.highlights};
     }
     &__subblock{
       display: flex;
@@ -526,6 +518,7 @@ export const AssignmentAnswerBlock = styled.section`
     }
     &__submitted {
       position: relative;
+      min-height: 42px;
       &:hover {
         .controls {
           clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
@@ -543,8 +536,14 @@ export const AssignmentAnswerBlock = styled.section`
       justify-content: flex-start;
       align-items: center;
       padding-right: 44px;
+      line-height: 20px;
+      > * + * {
+        margin-left: 15px;
+        padding-left: 15px;
+        border-left: 1px solid ${props => props.theme.highlights};
+      }
     }
-    &__link {
+    a {
       color: ${props => props.theme.secondary};
     }
   }

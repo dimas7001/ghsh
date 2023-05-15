@@ -59,7 +59,7 @@ export default {
       }
     })
   },
-  inject: ['ifRouteIncludes', 'goTo'],
+  inject: ['ifRouteNameIs', 'goTo'],
   methods: {
     ...mapMutations(['SET_USER_TOKENS']),
     async login() {

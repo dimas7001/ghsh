@@ -68,10 +68,10 @@ export default {
     SearchBlock, WorkflowBlock, TitleBlock, Controls
   },
   props: {
-    themeInfo: Object,
+    
   },
   emits: ['toggle-overlay', 'toggle-alert'],
-  inject: ['theme', 'goTo'],
+  inject: ['theme', 'themeInfo', 'goTo'],
   data() {
     return ({
 

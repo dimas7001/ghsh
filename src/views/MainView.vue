@@ -2,31 +2,27 @@
   <Body :theme="getCurrentTheme">
     <Header
       :sidebar-hidden="sidebarHidden"
-      :theme-info="themeInfo"
       @toggle-sidebar="toggleSidebar"
       @update-theme="updateTheme"
       @update-theme-mode="updateThemeMode"
     />
     <Sidebar
       :sidebar-hidden="sidebarHidden"
-      :theme-info="themeInfo"
     />
     <Container
       :class="{'container_s': !sidebarHidden}"
       :theme="getCurrentTheme"
     >
       <Courses
-        v-if="ifRouteIncludes(['courses'])"
+        v-if="ifRouteNameIs(['courses'])"
       />
       <Workflow
-        v-if="ifRouteIncludes(['workflow'])"
-        :theme-info="themeInfo"
+        v-if="ifRouteNameIs(['course'])"
         @toggle-overlay="toggleOverlay"
         @toggle-alert="toggleAlert"
       />
       <Assignment
-        v-if="ifRouteIncludes(['assignment'])"
-        :theme-info="themeInfo"
+        v-if="ifRouteNameIs(['assignment'])"
       />
     </Container>
     <Overlay
@@ -79,7 +75,7 @@ export default {
       },
     }
   },
-  inject: ['ifRouteIncludes', 'goTo'],
+  inject: ['ifRouteNameIs', 'goTo'],
   methods: {
     ...mapMutations(['CLEAN_CURRENT_COURSE_ID']),
     toggleSidebar() { //opening/closing the sidebar
@@ -118,7 +114,8 @@ export default {
   },
   provide() {
     return {
-      theme: computed(() => this.getCurrentTheme)
+      theme: computed(() => this.getCurrentTheme),
+      themeInfo: this.themeInfo
     }
   },
 }

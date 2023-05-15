@@ -13,7 +13,7 @@
   // add function that gets values from localStorage, store a complete state in localStorage
   export default {
     methods: {
-      ifRouteIncludes(arr) {
+      ifRouteNameIs(arr) {
         let res = false,
             routeName = this.getRoute
 
@@ -35,7 +35,7 @@
     },
     provide() {
       return {
-        ifRouteIncludes: this.ifRouteIncludes,
+        ifRouteNameIs: this.ifRouteNameIs,
         goTo: this.goTo
       }
     },

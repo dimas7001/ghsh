@@ -78,9 +78,8 @@ export default {
   },
   props: {
     sidebarHidden: Boolean,
-    themeInfo: Object,
   },
   emits: ['toggle-sidebar', 'update-theme', 'update-theme-mode'],
-  inject: ['theme'],
+  inject: ['theme', 'themeInfo'],
 }
 </script>
