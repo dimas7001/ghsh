@@ -1,7 +1,12 @@
 <template>
-  <AssignmentBlock>
+  <AssignmentBlock
+    :theme="theme"
+  >
     <div class="assignment">
-      <TitleBlock>{{ currentAssignment.name }}</TitleBlock>
+      <div class="assignment__group">
+        <TitleBlock>{{ currentAssignment.name }}</TitleBlock>
+        <div class="assignment__btn">Edit</div>
+      </div>
       <div class="assignment__description">{{ currentAssignment.description }}</div>
     </div>
   </AssignmentBlock>
@@ -28,6 +33,7 @@ export default {
     StudentsAnswers, AssignmentAnswer, AssignmentBlock, TitleBlock
   },
   emits: ['toggle-overlay', 'toggle-alert'],
+  inject: ['theme'],
   data() {
     return ({
       

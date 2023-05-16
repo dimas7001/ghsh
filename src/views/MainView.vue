@@ -24,6 +24,9 @@
       <Assignment
         v-if="ifRouteNameIs(['assignment'])"
       />
+      <Answer
+        v-if="ifRouteNameIs(['answer']) && getUserRole === 'teacher'"
+      />
     </Container>
     <Overlay
       :overlay-info="overlayInfo"
@@ -46,14 +49,15 @@ import Sidebar from '@/components/Sidebar.vue'
 import Courses from '@/components/Courses.vue'
 import Workflow from '@/components/Workflow.vue'
 import Assignment from '@/components/Assignment.vue'
+import Answer from '@/components/Answer.vue'
 import Overlay from '@/components/Overlay.vue'
 import Alert from '@/components/Alert.vue'
-import { mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'MainView',
   components: {
-    Body, Header, Sidebar, Container, Courses, Workflow, Assignment, Overlay, Alert
+    Body, Header, Sidebar, Container, Courses, Workflow, Assignment, Answer, Overlay, Alert
   },
   data() {
     return {
@@ -102,6 +106,7 @@ export default {
     },
   },
   computed: {
+    ...mapGetters(['getUserRole']),
     getCurrentTheme() { //return current theme
       return themes[this.themeInfo.theme][this.themeInfo.themeMode]
     },

@@ -10,9 +10,8 @@
       @click="goTo({ name: 'answer', params: { answerID: answer.answerID } })"
     >
       <div class="answer__section answer__section_info">
-        <div class="answer__student-info">{{ answer.studentName + ' ' + answer.studentSurname + ' - ' + answer.studentGroup }}</div>
         <div class="answer__block">
-          <div class="answer__title">{{ answer.answerTitle }}</div>
+          <div class="answer__student-info">{{ answer.studentName + ' ' + answer.studentSurname + ' - ' + answer.studentGroup }}</div>
           <a
             class="answer__link"
             :href="answer.answerLink"
@@ -30,9 +29,9 @@
           v-for="label in answer.labels"
           :key="label.name"
         >
-        {{ label.name }}
-        <span v-if="label.passed">✔</span>
-        <span v-else>✘</span>
+          {{ label.name }}
+          <span v-if="label.passed">✔</span>
+          <span v-else>✘</span>
         </div>
       </div>
       <div class="answer__section answer__section_grade">

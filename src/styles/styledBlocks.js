@@ -417,8 +417,43 @@ export const CoursesBlock = styled.section`
 `;
 
 export const AssignmentBlock = styled.section`
-  padding: 30px 0;
+  padding: 38px 0;
   border-bottom: 1px solid ${props => props.theme.highlights};
+  .assignment {
+    &__group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    &__btn {
+      width: fit-content;
+      padding: 7px 20px;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 20px;
+      color: ${props => props.theme.secondary};
+      background-color: ${props => props.theme.highlights + "1a"};
+      text-align: center;
+      border-radius: 5px;
+      transition: .1s all;
+      cursor: pointer;
+      &_inactive {
+        background-color: transparent;
+        opacity: .5;
+        transition: .1s all;
+        pointer-events: none;
+      }
+      &:hover {
+        color: ${props => props.theme.main};
+        background-color: ${props => props.theme.highlights + "99"};
+        transition: .1s all;
+      }
+    }
+    h1 {
+      margin: 0;
+    }
+  }
 `;
 
 export const AssignmentAnswerBlock = styled.section`
@@ -587,21 +622,15 @@ export const StudentsAnswersBlock = styled.section`
       display: flex;
       justify-content: flex-start;
       align-items: center;
+      margin-bottom: 8px;
     }
-    &__title,
     &__student-info {
       font-size: 16px;
       line-height: 20px;
-      font-weight: 500;
+      font-weight: 700;
       margin-right: 15px;
       padding-right: 15px;
-    }
-    &__title {
       border-right: 1px solid ${props => props.theme.highlights};
-    }
-    &__student-info {
-      margin-bottom: 8px;
-      font-weight: 700;
     }
     &__link {
       color: ${props => props.theme.secondary};
@@ -611,6 +640,80 @@ export const StudentsAnswersBlock = styled.section`
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
+    }
+    &__label {
+      width: fit-content;
+      padding: 3px 5px;
+      color: ${props => props.theme.secondary};
+      background-color: ${props => props.theme.highlights + "1a"};
+      border-radius: 5px;
+      transition: .1s all;
+    }
+  }
+`;
+
+export const AnswerInfoBlock = styled.section`
+  padding: 35px 0 40px;
+  .answer-info {
+    &__group {
+      display: flex;
+      justify-content: space-between;
+    }
+    &__line {
+      display: flex;
+      justify-content: flex-start;
+      &-title {
+        min-width: 90px;
+      }
+      &-labels {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+      + .answer-info__line {
+        margin-top: 13px;
+      }
+    }
+    &__label {
+      width: fit-content;
+      padding: 3px 5px;
+      color: ${props => props.theme.secondary};
+      background-color: ${props => props.theme.highlights + "1a"};
+      border-radius: 5px;
+      transition: .1s all;
+    }
+  }
+`;
+
+export const ActivityBlock = styled.section`
+  padding: 35px 0 40px;
+  border-top: 1px dashed ${props => props.theme.highlights};
+`;
+
+export const CommitsBlock = styled.section`
+  padding: 35px 0 40px;
+  border-top: 1px dashed ${props => props.theme.highlights};
+  .answer-info {
+    &__group {
+      display: flex;
+      justify-content: space-between;
+    }
+    &__line {
+      display: flex;
+      justify-content: flex-start;
+      &-title {
+        min-width: 90px;
+      }
+      &-labels {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+      + .answer-info__line {
+        margin-top: 10px;
+      }
     }
     &__label {
       width: fit-content;
