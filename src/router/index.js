@@ -4,21 +4,38 @@ const routes = [
   {
     path: '/',
     name: 'courses',
-    component: () => import('../views/MainView.vue')
-  },
-  {
-    path: '/course_:courseID',
-    name: 'course',
     component: () => import('../views/MainView.vue'),
     children: [
       {
-        path: 'assignment_:assignmentID',
-        name: 'assignment',
+        path: 'course_:courseID',
+        name: 'course',
         component: () => import('../views/MainView.vue'),
         children: [
           {
-            path: 'answer_:answerID',
-            name: 'answer',
+            path: 'assignment_:assignmentID',
+            name: 'assignment',
+            component: () => import('../views/MainView.vue'),
+            children: [
+              {
+                path: 'answer_:answerID',
+                name: 'answer',
+                component: () => import('../views/MainView.vue'),
+              },
+            ]
+          },
+          {
+            path: 'user_:userID',
+            name: 'user',
+            component: () => import('../views/MainView.vue'),
+          },
+          {
+            path: 'students',
+            name: 'students',
+            component: () => import('../views/MainView.vue'),
+          },
+          {
+            path: 'statistics',
+            name: 'statistics',
             component: () => import('../views/MainView.vue'),
           },
         ]

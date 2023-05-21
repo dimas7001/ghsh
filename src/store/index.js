@@ -75,7 +75,7 @@ export default createStore({
       state.user.userTokens.accessToken = tokens.access_token
       state.user.userTokens.refreshToken = tokens.refresh_token
     },
-    CLEAR_DATA(state) {
+    CLEAR_USER_DATA(state) {
       state.user.userTokens.accessToken = ""
       state.user.userTokens.refreshToken = ""
       // and much other data
@@ -83,7 +83,7 @@ export default createStore({
     ADD_CURRENT_COURSE_ID(state, id) {
       state.currentCourseID = id
     },
-    CLEAN_CURRENT_COURSE_ID(state) {
+    CLEAR_CURRENT_COURSE_ID(state) {
       state.currentCourseID = ""
     },
     EDIT_ASSIGNMENT(state, editedAssignment) {

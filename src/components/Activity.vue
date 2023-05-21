@@ -1,11 +1,12 @@
 <template>
-  <ActivityBlock>
+  <ActivityBlock
+    :theme="theme"
+  >
     <SubtitleBlock>Repo Activity Chart</SubtitleBlock>
-    <Bar
-      id="my-chart-id"
-      :options="chartOptions"
-      :data="chartData"
-    />
+    <canvas
+      class="activity__chart"
+      id="activityChart"
+    ></canvas>
   </ActivityBlock>
 </template>
 
@@ -14,26 +15,100 @@ import {
   ActivityBlock,
   SubtitleBlock
 } from "../styles/styledBlocks.js"
-import { Bar } from 'vue-chartjs'
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+import { Chart, registerables } from 'chart.js'
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+Chart.register(...registerables)
 
 export default {
   name: 'Activity',
   components: {
-    ActivityBlock, SubtitleBlock, Bar
+    ActivityBlock, SubtitleBlock
   },
   data() {
     return {
-      chartData: {
-        labels: [ 'January', 'February', 'March' ],
-        datasets: [ { data: [40, 20, 12] } ]
-      },
-      chartOptions: {
-        responsive: true
-      }
+      chartInstance: '',
+      chartContext: '',
     }
-  }
+  },
+  inject: ['theme'],
+  computed: {
+    currentChartData() {
+      return {
+        type: 'line',
+        data: {
+          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+          datasets: [{
+            data: [12, 19, 3, 5, 22, 13],
+            borderWidth: 2,
+            fill: true,
+            cubicInterpolationMode: 'monotone',
+            backgroundColor: `${this.theme.highlights + '30'}`,
+            borderColor: this.theme.highlights,
+            pointBackgroundColor: this.theme.highlights,
+          }]
+        },
+        options: {
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Date',
+                color: this.theme.secondary,
+                font: {
+                  weight: 600,
+                },
+              },
+              ticks: {
+                color: this.theme.secondary,
+              },
+              grid: {
+                display: false,
+                color: `${this.theme.highlights + '20'}`,
+              },
+              border: {
+                color: `${this.theme.highlights + '30'}`,
+              },
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'Number of commits',
+                color: this.theme.secondary,
+                font: {
+                  weight: 600,
+                },
+              },
+              ticks: {
+                color: this.theme.secondary,
+              },
+              grid: {
+                display: false,
+                color: `${this.theme.highlights + '20'}`,
+              },
+              border: {
+                color: `${this.theme.highlights + '30'}`,
+              },
+              beginAtZero: true
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            }
+          }
+        }
+      }
+    },
+  },
+  mounted() {
+    this.chartContext = document.getElementById('activityChart')
+    this.chartInstance = new Chart(this.chartContext, this.currentChartData)
+  },
+  watch: {
+    theme() {
+      this.chartInstance.destroy()
+      this.chartInstance = new Chart(this.chartContext, this.currentChartData)
+    },
+  },
 }
 </script>

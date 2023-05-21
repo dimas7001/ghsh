@@ -3,6 +3,11 @@
     :theme="theme"
   >
     <TitleBlock>Your Courses</TitleBlock>
+    <NewItemBlock
+      :theme="theme"
+      class="courses__create"
+      @click="addCourse"
+    />
     <div class="courses__wrapper">
       <div
         class="course"
@@ -15,6 +20,20 @@
         <div class="course__name">
           {{ course.name }}
         </div>
+        <Controls
+            class="controls"
+            :theme="theme"
+          >
+            <div
+              class="controls__delete"
+              @click.stop="deleteAssignment(assignment.id)"
+            >
+              <img
+                :src="require(`@/assets/img/icons/delete/delete_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
+                alt="delete"
+              >
+            </div>
+          </Controls>
       </div>
       <div class="course__no-items">You don't have any courses yet :(</div>
     </div>
@@ -22,19 +41,18 @@
 </template>
 
 <script>
-import { CoursesBlock, TitleBlock } from "../styles/styledBlocks.js"
-import NewNote from '@/components/NewNote.vue'
+import { CoursesBlock, TitleBlock, NewItemBlock, Controls } from "../styles/styledBlocks.js"
 import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'Courses',
   components: {
-    CoursesBlock, TitleBlock, NewNote
+    CoursesBlock, TitleBlock, NewItemBlock, Controls
   },
   props: {
   },
   emits: [],
-  inject: ['theme', 'goTo'],
+  inject: ['theme', 'themeInfo', 'goTo'],
   data() {
     return ({
     })
@@ -44,6 +62,9 @@ export default {
     goToCourse(id) {
       this.ADD_CURRENT_COURSE_ID(id)
       this.goTo({ name: 'course', params: { courseID: `${id}` } })
+    },
+    addCourse() {
+      console.log("add_course triggered")
     },
   },
   computed: {

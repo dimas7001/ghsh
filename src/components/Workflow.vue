@@ -8,7 +8,15 @@
         @click="downloadFile"
       >click to save</div>
     </div> -->
-    <div class="wf-item__group">
+    <NewItemBlock
+      :theme="theme"
+      class="courses__create"
+      @click="addArticle"
+    />
+    <div
+      class="wf-item__group"
+      v-if="anyAssignmentExist"
+    >
       <div
         class="wf-item__wrapper"
         v-for="assignment in getAssignments"
@@ -53,19 +61,23 @@
         </div>
       </div>
     </div>
-    <div class="wf-item__no-items">This course is empty :(</div>
+    <div class="wf-item__no-items">
+      This course is empty :(
+      <br>
+      Add some articles with +
+    </div>
   </WorkflowBlock>
 </template>
 
 <script>
-import { SearchBlock, WorkflowBlock, TitleBlock, Controls } from "../styles/styledBlocks.js"
+import { SearchBlock, WorkflowBlock, TitleBlock, Controls, NewItemBlock } from "../styles/styledBlocks.js"
 import { mapGetters, mapMutations } from 'vuex'
 import axios from 'axios'
 
 export default {
   name: 'Workflow',
   components: {
-    SearchBlock, WorkflowBlock, TitleBlock, Controls
+    SearchBlock, WorkflowBlock, TitleBlock, Controls, NewItemBlock
   },
   props: {
     
@@ -100,9 +112,15 @@ export default {
         fileLink.click();
       })
     },
+    addArticle() {
+      console.log('addArticle triggered')
+    },
   },
   computed: {
     ...mapGetters(['getAssignments', 'getAccessToken']),
+    anyAssignmentExist() {
+      return this.getAssignments ? true : false
+    }
   },
   watch: {
     $props: {

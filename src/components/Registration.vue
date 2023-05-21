@@ -1,53 +1,101 @@
 <template>
-  <LoginBlock>
+  <RegistrationBlock>
     <div class="login">
       <form
-        class="login__form"
+        class="registration__form"
         @submit.prevent="login"
       >
         <input
-          class="login__name"
-          placeholder="Your login please"
+          class="registration__name"
+          placeholder="Your name please"
           type="text"
-          v-model="name"
+          v-model="registrationData.name"
         >
         <input
-          class="login__password"
-          placeholder="And password"
+          class="registration__name"
+          placeholder="Surname"
+          type="text"
+          v-model="registrationData.surname"
+        >
+        <input
+          class="registration__name"
+          placeholder="Your group"
+          type="text"
+          v-model="registrationData.group"
+        >
+        <input
+          class="registration__name"
+          placeholder="Email"
+          type="text"
+          v-model="registrationData.email"
+        >
+        <input
+          class="registration__name"
+          placeholder="Your Telegram tag"
+          type="text"
+          v-model="registrationData.telegram"
+        >
+        <input
+          class="registration__name"
+          placeholder="Please repeat password"
+          type="checkbox"
+          id="is-teacher"
+          v-model="registrationData.isTeacher"
+        >
+        <label for="is-teacher">Are you a techer?</label>
+        <input
+          class="registration__password"
+          placeholder="Password"
           type="password"
-          v-model="password"
+          v-model="registrationData.password"
+        >
+        <input
+          class="registration__password"
+          placeholder="Please repeat password"
+          type="password"
+          v-model="registrationDataCheck.password"
         >
         <div
-          class="login__submit"
-          :class="{'login__submit_inactive': !formDataFull}"
+          class="registration__submit"
+          :class="{'registration__submit_inactive': !formDataFull}"
           @click="login"
         >
-          Enter
+          Register
         </div>
       </form>
-      <div class="login__or">or</div>
+      <div class="registration__or">or</div>
       <div
-        class="login__registration"
-        @click="goTo({ name: 'registration' })"
+        class="registration__registration"
+        @click="goTo({ name: 'login' })"
       >
-        Register ⇛
+        ⇚ Login
       </div>
     </div>
-  </LoginBlock>
+  </RegistrationBlock>
 </template>
 
 <script>
-import { LoginBlock } from "@/styles/styledBlocks.js"
+import { RegistrationBlock } from "@/styles/styledBlocks.js"
 
 export default {
-  name: 'Login',
+  name: 'Registration',
   components: {
-    LoginBlock
+    RegistrationBlock
   },
   data() {
     return ({
-      name: '',
-      password: '',
+      registrationData: {
+        name: '',
+        surname: '',
+        group: '',
+        email: '',
+        telegram: '',
+        isTeacher: false,
+        password: ''
+      },
+      registrationDataCheck: {
+        password: '',
+      }
     })
   },
   inject: ['ifRouteNameIs', 'goTo'],

@@ -5,18 +5,7 @@
     <div class="assignment">
       <div class="assignment__group">
         <TitleBlock>{{ currentAssignment.name }}</TitleBlock>
-        <div class="assignment__rate">
-          <input
-            class="assignment__grade"
-            type="text"
-            placeholder="Grade"
-            v-model="newGrade"
-          >
-          <div
-            class="assignment__btn"
-            @click="saveGrade"
-          >Save The Grade</div>
-        </div>
+        <div class="assignment__btn">Rate The Answer</div>
       </div>
       <div class="assignment__description">{{ currentAssignment.description }}</div>
     </div>
@@ -57,7 +46,9 @@
     </div>
   </AnswerInfoBlock>
   <!-- for activity pass data with props -->
-  <Activity/>
+  <Activity
+    :theme="theme"
+  />
   <Commits
     :theme="theme"
   >
@@ -78,7 +69,7 @@ import {
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'Answer',
+  name: 'Profile',
   components: {
     StudentsAnswers, AssignmentBlock, TitleBlock, SubtitleBlock, AnswerInfoBlock, Activity, Commits
   },
@@ -86,7 +77,6 @@ export default {
   inject: ['theme'],
   data() {
     return ({
-      newGrade: '',
       answer: {
         answerID: "a1234",
         answerTitle: "My Answer Title 2",
@@ -120,16 +110,13 @@ export default {
     })
   },
   methods: {
-    saveGrade() {
-      this.newGrade <= this.answer.maxGrade ? console.log("saveGrade triggered, correct input") : console.log("saveGrade triggered, incorrect input")
-    }
+    
   },
   computed: {
     ...mapGetters(['getAssignment', 'getUserRole']),
     currentAssignment() {
       return this.getAssignment(this.$route.params.assignmentID)
     },
-
   },
 }
 </script>

@@ -24,6 +24,12 @@
       <Assignment
         v-if="ifRouteNameIs(['assignment'])"
       />
+      <StudentsList
+        v-if="ifRouteNameIs(['students'])"
+      />
+      <Statistics
+        v-if="ifRouteNameIs(['statistics'])"
+      />
       <Answer
         v-if="ifRouteNameIs(['answer']) && getUserRole === 'teacher'"
       />
@@ -41,7 +47,7 @@
 </template>
 
 <script>
-import { computed } from 'vue'
+import { computed, reactive } from 'vue'
 import themes from '@/styles/themes.js'
 import { Body, Container } from "@/styles/styledBlocks.js"
 import Header from '@/components/Header.vue'
@@ -49,6 +55,8 @@ import Sidebar from '@/components/Sidebar.vue'
 import Courses from '@/components/Courses.vue'
 import Workflow from '@/components/Workflow.vue'
 import Assignment from '@/components/Assignment.vue'
+import StudentsList from '@/components/StudentsList.vue'
+import Statistics from '@/components/Statistics.vue'
 import Answer from '@/components/Answer.vue'
 import Overlay from '@/components/Overlay.vue'
 import Alert from '@/components/Alert.vue'
@@ -57,7 +65,7 @@ import { mapGetters, mapMutations } from 'vuex'
 export default {
   name: 'MainView',
   components: {
-    Body, Header, Sidebar, Container, Courses, Workflow, Assignment, Answer, Overlay, Alert
+    Body, Header, Sidebar, Container, Courses, Workflow, Assignment, StudentsList, Statistics, Answer, Overlay, Alert
   },
   data() {
     return {
@@ -81,7 +89,7 @@ export default {
   },
   inject: ['ifRouteNameIs', 'goTo'],
   methods: {
-    ...mapMutations(['CLEAN_CURRENT_COURSE_ID']),
+    ...mapMutations(['CLEAR_CURRENT_COURSE_ID']),
     toggleSidebar() { //opening/closing the sidebar
       this.sidebarHidden = !this.sidebarHidden
     },
@@ -114,7 +122,7 @@ export default {
   watch: {
     $route(to) {
       if (to.name == "courses")
-        this.CLEAN_CURRENT_COURSE_ID()
+        this.CLEAR_CURRENT_COURSE_ID()
     }
   },
   provide() {

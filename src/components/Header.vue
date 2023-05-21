@@ -1,15 +1,3 @@
-<!--
-.burger
-  - move a .burger__bullet depending on sidebarHidden value
-  - emits sidebar show/hide
-
-.header__customize
-  - changes the icon depending on themeInfo.themeMode = {'light', 'dark'}
-  - emits theme change
-
-.header__logout
-  - changes the icon depending on themeInfo.themeMode = {'light', 'dark'}
--->
 <template>
   <HeaderBlock :theme="theme">
     <ContainerHeader>

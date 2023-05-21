@@ -48,6 +48,7 @@
             'sidebar__item_active': ifRouteNameIs(['students']),
             'sidebar__item_inactive': !getCurrentCourseID
           }"
+          @click="goTo({ name: 'students' })"
         >
           <img
             :src="require(`@/assets/img/icons/people/people_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
@@ -61,6 +62,7 @@
             'sidebar__item_active': ifRouteNameIs(['statistics']),
             'sidebar__item_inactive': !getCurrentCourseID
           }"
+          @click="goTo({ name: 'statistics' })"
         >
           <img
             :src="require(`@/assets/img/icons/statistics/statistics_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
@@ -71,6 +73,7 @@
       </div>
       <div class="sidebar__group">
         <div class="sidebar__item"
+        @click="logout"
         >
           <img
             :src="require(`@/assets/img/icons/logout/logout_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
@@ -85,7 +88,7 @@
 
 <script>
 import { SidebarBlock } from "@/styles/styledBlocks.js"
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'Sidebar',
@@ -97,6 +100,11 @@ export default {
   },
   inject: ['theme', 'themeInfo', 'ifRouteNameIs', 'goTo'],
   methods: {
+    ...mapMutations(['CLEAR_USER_DATA']),
+    logout() {
+      this.CLEAR_USER_DATA()
+      this.goTo({ name: 'login' })
+    },
   },
   computed: {
     ...mapGetters(['getCurrentCourseID']),

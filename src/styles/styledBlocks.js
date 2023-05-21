@@ -68,9 +68,16 @@ export const HeaderBlock = styled.header`
       color: ${props => props.theme.highlights};
       cursor: default;
     }
+    &__settings {
+      transition: .2s all;
+      :hover {
+        transform: rotate(90deg);
+        transition: .2s all;
+      }
+    }
     &__customize {
       position: relative;
-      &:hover {
+      :hover {
         .header__customize-img {
           transform: translateX(-24px) rotate(-90deg);
           transition: .2s all;
@@ -261,10 +268,10 @@ export const SearchBlock = styled.input`
   }
 `;
 
-export const NewNoteBlock = styled.div`
+export const NewItemBlock = styled.div`
   position: absolute;
-  top: 103px;
-  right: 50px;
+  top: 38px;
+  right: 10px;
   width: 40px;
   height: 40px;
   background-color: inherit;
@@ -326,6 +333,7 @@ export const Controls = styled.div`
 `;
 
 export const WorkflowBlock = styled.section`
+  position: relative;
   margin: 0;
   padding: 30px 0;
   .wf-item {
@@ -369,6 +377,10 @@ export const WorkflowBlock = styled.section`
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
     }
+    &__no-items{
+      margin-top: 10px;
+      text-align: center;
+    }
     .controls {
       clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
       &__edit,
@@ -386,17 +398,22 @@ export const WorkflowBlock = styled.section`
 `;
 
 export const CoursesBlock = styled.section`
+  position: relative;
   margin: 0;
   padding: 30px 0;
   .course {
+    position: relative;
     margin-top: 15px;
-    padding: 10px 10px 10px 20px;
+    padding: 10px 44px 10px 20px;
     border-left: 4px solid transparent;
     cursor: pointer;
     &:hover {
       border-left-color: ${props => props.theme.highlights};
       background-color: ${props => props.theme.highlights + '1a'};
       transition: .2s all;
+      .controls {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      }
     }
     + .course__no-items {
       display: none;
@@ -413,6 +430,10 @@ export const CoursesBlock = styled.section`
       margin-top: 10px;
       text-align: center;
     }
+    .controls {
+      top: 11px;
+      clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+    }
   }
 `;
 
@@ -425,6 +446,34 @@ export const AssignmentBlock = styled.section`
       justify-content: space-between;
       align-items: center;
       margin-bottom: 30px;
+    }
+    &__rate {
+      display: flex;
+      justify-content: flex-end;
+      align-items: stretch;
+      > * + * {
+        margin-left: 10px;
+      }
+    }
+    &__grade {
+      width: 55px;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 16px;
+      text-align: center;
+      color: ${props => props.theme.secondary};
+      background-color: ${props => props.theme.main};
+      border-radius: 4px;
+      border-color: transparent;
+      border-bottom-color: ${props => props.theme.secondary};
+      outline: none;
+      white-space: pre-wrap;
+      transition: .05s all;
+      &:focus {
+        background-color: ${props => props.theme.highlights + '1a'};
+        border-bottom-color: ${props => props.theme.highlights};
+        transition: .05s all;
+      }
     }
     &__btn {
       width: fit-content;
@@ -580,6 +629,7 @@ export const AssignmentAnswerBlock = styled.section`
     }
     a {
       color: ${props => props.theme.secondary};
+      transition: .1s all;
     }
   }
 `;
@@ -684,11 +734,20 @@ export const AnswerInfoBlock = styled.section`
       transition: .1s all;
     }
   }
+  a {
+    color: ${props => props.theme.secondary};
+    transition: .1s all;
+  }
 `;
 
 export const ActivityBlock = styled.section`
   padding: 35px 0 40px;
   border-top: 1px dashed ${props => props.theme.highlights};
+  .activity {
+    &__chart {
+      max-height: 400px;
+    }
+  }
 `;
 
 export const CommitsBlock = styled.section`
@@ -733,6 +792,105 @@ export const LoginBlock = styled.div`
   width: 100vw;
   height: 100vh;
   .login {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 40vw;
+    min-width: 300px;
+    max-width: 450px;
+    padding: 30px 25px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px 1px #00000080;
+    &__form {
+      display: flex;
+      flex-direction: column;
+      justify-content: stretch;
+      align-items: center;
+      width: 100%;
+    }
+    &__password {
+      margin-top: 15px;
+    }
+    &__submit,
+    &__registration {
+      width: fit-content;
+      margin: 0 auto;
+      padding: 5px 15px;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 21px;
+      color: #353535;
+      background-color: #0000001a;
+      text-align: center;
+      border-radius: 5px;
+      transition: .1s all;
+      cursor: pointer;
+      &_inactive {
+        background-color: transparent;
+        opacity: .5;
+        transition: .1s all;
+        pointer-events: none;
+      }
+      &:hover {
+        color: #ffffff;
+        background-color: #00000099;
+        transition: .1s all;
+      }
+    }
+    &__submit {
+      margin: 20px auto 0;
+    }
+    &__or {
+      position: relative;
+      margin: 15px 0 25px;
+      ::before,
+      ::after {
+        content: '';
+        position: absolute;
+        top: 60%;
+        display: block;
+        width: 50px;
+        height: 1px;
+        background-color: #353535;
+      }
+      ::before {
+        right: calc(100% + 13px);
+      }
+      ::after {
+        left: calc(100% + 13px);
+      }
+    }
+    input {
+      width: 100%;
+      padding: 10px 5px;
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 23px;
+      color: #353535;
+      background-color: #ffffff;
+      border-radius: 8px 8px 4px 4px;
+      border-color: transparent;
+      border-bottom-color: #353535;
+      outline: none;
+      white-space: pre-wrap;
+      transition: .05s all;
+      &:focus {
+        background-color: #0000001a;
+        border-bottom-color: #000000;
+        transition: .05s all;
+      }
+    }
+  }
+`;
+
+export const RegistrationBlock = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  .registration {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
