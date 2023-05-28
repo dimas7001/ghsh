@@ -3,6 +3,7 @@
     :theme="theme"
   >
     <SubtitleBlock>Repo Activity Chart</SubtitleBlock>
+    <span v-html="chartData"></span>
     <canvas
       class="activity__chart"
       id="activityChart"
@@ -24,6 +25,9 @@ export default {
   components: {
     ActivityBlock, SubtitleBlock
   },
+  props: {
+    repoActivity: Array,
+  },
   data() {
     return {
       chartInstance: '',
@@ -32,7 +36,7 @@ export default {
   },
   inject: ['theme'],
   computed: {
-    currentChartData() {
+    chartSettings() {
       return {
         type: 'line',
         data: {
@@ -99,15 +103,29 @@ export default {
         }
       }
     },
+    chartData() {
+      // let commitsArr = []
+      // this.repoActivity
+      //   .forEach(branch => commitsArr.push(...branch.commits))
+
+      // let commitsDates = commitsArr
+      //   .map(commit => !commitsArr.some(commitInfo => commit === commitInfo))
+
+      // commitsDates = commitsArr.sort()
+
+
+      // console.log(commitsDates)
+      return 1
+    },
   },
   mounted() {
     this.chartContext = document.getElementById('activityChart')
-    this.chartInstance = new Chart(this.chartContext, this.currentChartData)
+    this.chartInstance = new Chart(this.chartContext, this.chartSettings)
   },
   watch: {
     theme() {
       this.chartInstance.destroy()
-      this.chartInstance = new Chart(this.chartContext, this.currentChartData)
+      this.chartInstance = new Chart(this.chartContext, this.chartSettings)
     },
   },
 }

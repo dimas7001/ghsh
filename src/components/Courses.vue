@@ -11,29 +11,43 @@
     <div class="courses__wrapper">
       <div
         class="course"
-        v-for="course in getCourses"
+        v-for="course in currentCourses"
         :key="course.id"
         :id="course.id"
         @click="goToCourse(course.id)"
         v-cloak
       >
-        <div class="course__name">
-          {{ course.name }}
+        <div class="course__block">
+          <div class="course__name">
+            {{ course.title }}
+          </div>
+          <div class="course__teacher">
+            {{ course.educator }}
+          </div>
+        </div>
+        <div class="course__block course__block_dates">
+          <div class="course__date">
+            {{ formatDate(course.start_date) }}
+          </div>
+          <div class="course__date-separator"></div>
+          <div class="course__date">
+            {{ formatDate(course.end_date) }}
+          </div>
         </div>
         <Controls
-            class="controls"
-            :theme="theme"
+          class="controls"
+          :theme="theme"
+        >
+          <div
+            class="controls__delete"
+            @click.stop="deleteCourse(course.id)"
           >
-            <div
-              class="controls__delete"
-              @click.stop="deleteAssignment(assignment.id)"
+            <img
+              :src="require(`@/assets/img/icons/delete/delete_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
+              alt="delete"
             >
-              <img
-                :src="require(`@/assets/img/icons/delete/delete_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
-                alt="delete"
-              >
-            </div>
-          </Controls>
+          </div>
+        </Controls>
       </div>
       <div class="course__no-items">You don't have any courses yet :(</div>
     </div>
@@ -52,9 +66,111 @@ export default {
   props: {
   },
   emits: [],
-  inject: ['theme', 'themeInfo', 'goTo'],
+  inject: ['theme', 'themeInfo', 'goTo', 'formatDate'],
   data() {
     return ({
+      courses: [
+        {
+          id: 1,
+          "title": "Back-end",
+          "description": "Course for Back-end developers",
+          "educator": "Kostyantin Zhereb",
+          "tasks": [
+            {
+              "id": 1,
+              "title": "Database Fundamentals",
+              description: "Learn the basics of database design and management",
+              "startDate": "2023-01-08T12:30:00.000+00:00",
+              "endDate": "2023-01-08T12:30:00.000+00:00",
+              "max_point": 8.0
+            },
+            {
+              "id": 2,
+              "title": "SQL Queries",
+              "description": "Learn how to write SQL queries to retrieve and manipulate data",
+              "startDate": "2023-01-10T12:30:00.000+00:00",
+              "endDate": "2023-01-15T12:30:00.000+00:00",
+              "max_point": 9.0
+            },
+            {
+              "id": 3,
+              "title": "Server-side Scripting",
+              "description": "Learn how to write server-side scripts using PHP",
+              "startDate": "2023-01-16T12:30:00.000+00:00",
+              "endDate": "2023-01-20T12:30:00.000+00:00",
+              "max_point": 9.0
+            },
+            {
+              "id": 4,
+              "title": "API Development",
+              "description": "Learn how to develop RESTful APIs for web applications",
+              "startDate": "2023-01-21T12:30:00.000+00:00",
+              "endDate": "2023-01-23T12:30:00.000+00:00",
+              "max_point": 10.0
+            },
+            {
+              "id": 5,
+              "title": "Security and Authentication",
+              "description": "Learn about web application security and authentication techniques",
+              "startDate": "2023-01-24T12:30:00.000+00:00",
+              "endDate": "2023-01-30T12:30:00.000+00:00",
+              "max_point": 10.0
+            }
+          ],
+          "start_date": "2023-01-08T12:30:00.000+00:00",
+          "end_date": "2023-03-08T12:30:00.000+00:00"
+        },
+        {
+          "id": 2,
+          "title": "Back-end",
+          "description": "Course for Back-end developers",
+          "educator": "Kostyantin Zhereb",
+          "tasks": [
+            {
+              "id": 1,
+              "title": "Database Fundamentals",
+              "description": "Learn the basics of database design and management",
+              "startDate": "2023-01-08T12:30:00.000+00:00",
+              "endDate": "2023-01-08T12:30:00.000+00:00",
+              "max_point": 8.0
+            },
+            {
+              "id": 2,
+              "title": "SQL Queries",
+              "description": "Learn how to write SQL queries to retrieve and manipulate data",
+              "startDate": "2023-01-10T12:30:00.000+00:00",
+              "endDate": "2023-01-15T12:30:00.000+00:00",
+              "max_point": 9.0
+            },
+            {
+              "id": 3,
+              "title": "Server-side Scripting",
+              "description": "Learn how to write server-side scripts using PHP",
+              "startDate": "2023-01-16T12:30:00.000+00:00",
+              "endDate": "2023-01-20T12:30:00.000+00:00",
+              "max_point": 9.0
+            },
+            {
+              "id": 4,
+              "title": "API Development",
+              "description": "Learn how to develop RESTful APIs for web applications",
+              "startDate": "2023-01-21T12:30:00.000+00:00",
+              "endDate": "2023-01-23T12:30:00.000+00:00",
+              "max_point": 10.0
+            },
+            {
+              "id": 5,
+              "title": "Security and Authentication",
+              "description": "Learn about web application security and authentication techniques",
+              "startDate": "2023-01-24T12:30:00.000+00:00",
+              "endDate": "2023-01-30T12:30:00.000+00:00",
+              "max_point": 10.0
+            }
+          ],
+          "start_date": "2023-01-08T12:30:00.000+00:00",
+          "end_date": "2023-03-08T12:30:00.000+00:00"
+        }
+      ]
     })
   },
   methods: {
@@ -68,7 +184,16 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['getCourses']),
+    currentCourses() {
+      return this.courses
+    },
   },
 }
+
+// { post, create course
+//     "title": "Computer Science",
+//     "description": "Computer Science description"
+// }
+
+
 </script>

@@ -31,7 +31,8 @@
         v-if="ifRouteNameIs(['statistics'])"
       />
       <Answer
-        v-if="ifRouteNameIs(['answer']) && getUserRole === 'teacher'"
+        v-if="ifRouteNameIs(['answer']) && !getUserIsStudent"
+        @toggle-alert="toggleAlert"
       />
     </Container>
     <Overlay
@@ -47,7 +48,7 @@
 </template>
 
 <script>
-import { computed, reactive } from 'vue'
+import { computed } from 'vue'
 import themes from '@/styles/themes.js'
 import { Body, Container } from "@/styles/styledBlocks.js"
 import Header from '@/components/Header.vue'
@@ -114,7 +115,6 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['getUserRole']),
     getCurrentTheme() { //return current theme
       return themes[this.themeInfo.theme][this.themeInfo.themeMode]
     },

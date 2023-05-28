@@ -6,36 +6,25 @@
     <div
       class="answer"
       v-for="answer in studentAnswers"
-      :key="answer.answerID"
-      @click="goTo({ name: 'answer', params: { answerID: answer.answerID } })"
+      :key="answer.id"
+      @click="goTo({ name: 'answer', params: { answerID: answer.id } })"
     >
       <div class="answer__section answer__section_info">
         <div class="answer__block">
-          <div class="answer__student-info">{{ answer.studentName + ' ' + answer.studentSurname + ' - ' + answer.studentGroup }}</div>
+          <div class="answer__student-info">{{ answer.firstname + ' ' + answer.lastname + ' - ' + answer.group }}</div>
           <a
             class="answer__link"
             :href="answer.answerLink"
             target="_blank"
-          >{{ answer.answerLink }}</a>
+          >{{ "ADD_LINK_TO_RESPONCE" }}</a>
         </div>
         <div
           class="answer__comment"
-          v-if="answer.answerComment"
-        >{{ answer.answerComment }}</div>
-      </div>
-      <div class="answer__section answer__section_labels">
-        <div
-          class="answer__label"
-          v-for="label in answer.labels"
-          :key="label.name"
-        >
-          {{ label.name }}
-          <span v-if="label.passed">✔</span>
-          <span v-else>✘</span>
-        </div>
+          v-if="true/*answer.answerComment*/"
+        >{{ "ADD_COMMENT_TO_RESPONCE" }}</div>
       </div>
       <div class="answer__section answer__section_grade">
-        <span>{{ answer.answerGrade }}/{{ answer.maxGrade }}</span>
+        <span>{{ answer.passed_tasks[0].point }}/{{ answer.passed_tasks[0].task.max_point }}</span>
       </div>
     </div>
   </StudentsAnswersBlock>
@@ -57,70 +46,56 @@ export default {
     return ({
       studentAnswers: [
         {
-          answerID: "a1234",
-          answerTitle: "My Answer Title 2",
-          answerLink: "https://github.com/dimas7001/ghsh",
-          answerComment: "Sleeper shark basking shark: sea chub convict cichlid velvet-belly shark galjoen fish, tripletail; longfin dragonfish.",
-          answerFileName: "dummy_file.pdf",
-          answerGrade: 9,
-          maxGrade: 10,
-          studentName: "Name",
-          studentSurname: "Surname",
-          studentGroup: "IS-93",
-          labels: [
+          "id": 1,
+          "firstname": "John",
+          "lastname": "Doe",
+          "group": "Group A",
+          "passed_tasks": [
             {
-              name: '.gitigrore',
-              passed: true
-            },
-            {
-              name: 'readme',
-              passed: false
-            },
-            {
-              name: 'somethigelse.html',
-              passed: true
-            },
-            {
-              name: 'dontreadme',
-              passed: false
+              "id": 1,
+              "point": 8.0,
+              "task": {
+                "id": 1,
+                "title": "Database Fundamentals",
+                "max_point": 8.0
+              },
+              "is_assessed": true
             }
           ]
         },
         {
-          answerID: "a1235",
-          answerTitle: "My Answer Title 3",
-          answerLink: "https://github.com/dimas7001/ghsh",
-          answerComment: "Sleeper shark basking shark: sea chub convict cichlid velvet-belly shark galjoen fish, tripletail; longfin dragonfish.",
-          answerFileName: "dummy_file.pdf",
-          answerGrade: 9,
-          maxGrade: 10,
-          labels: [
+          "id": 2,
+          "firstname": "John",
+          "lastname": "Doe",
+          "group": "Group A",
+          "passed_tasks": [
             {
-              name: '.gitigrore',
-              passed: true
-            },
-            {
-              name: 'readme',
-              passed: false
+              "id": 1,
+              "point": 8.0,
+              "task": {
+                "id": 1,
+                "title": "Database Fundamentals",
+                "max_point": 8.0
+              },
+              "is_assessed": true
             }
           ]
         },
         {
-          answerID: "a1236",
-          answerTitle: "My Answer Title Title Title 4",
-          answerLink: "https://github.com/dimas7001/ghsh",
-          answerComment: "Sleeper shark basking shark: sea chub convict cichlid velvet-belly shark galjoen fish, tripletail; longfin dragonfish.",
-          answerFileName: "dummy_file.pdf",
-          answerGrade: 9,
-          maxGrade: 10,
-          labels: [
+          "id": 3,
+          "firstname": "John",
+          "lastname": "Doe",
+          "group": "Group A",
+          "passed_tasks": [
             {
-              name: '.gitigrore',
-              passed: true
-            },
-            {
-              name: 'readme',
-              passed: false
+              "id": 1,
+              "point": 8.0,
+              "task": {
+                "id": 1,
+                "title": "Database Fundamentals",
+                "max_point": 8.0
+              },
+              "is_assessed": true
             }
           ]
         }

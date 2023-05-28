@@ -53,6 +53,11 @@ const routes = [
     component: () => import('../views/EnterView.vue')
   },
   {
+    path: '/complete_registration',
+    name: 'complete_registration',
+    component: () => import('../views/EnterView.vue')
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
     component: () => import('../components/NotFound.vue')

@@ -8,8 +8,8 @@ export const Body = styled.div`
   font-weight: 400;
   font-size: 14px;
   line-height: 17px;
-  color: ${props => props.theme.secondary};
-  background-color: ${props => props.theme.main};
+  color: ${props => props.theme ? props.theme.secondary : '#353535'};
+  background-color: ${props => props.theme ? props.theme.main : '#ffffff'};
   overflow: hidden;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -304,7 +304,8 @@ export const NewItemBlock = styled.div`
 
 export const Controls = styled.div`
   position: absolute;
-  top: 7px;
+  top: 50%;
+  transform: translateY(-50%);
   right: 7px;
   display: flex;
   justify-content: flex-end;
@@ -338,7 +339,10 @@ export const WorkflowBlock = styled.section`
   padding: 30px 0;
   .wf-item {
     position: relative;
-    padding: 15px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 100px 15px 10px;
     cursor: pointer;
     &:hover {
       box-shadow: 0 0 5px 1px ${props => props.theme.highlights + '80'};
@@ -363,6 +367,17 @@ export const WorkflowBlock = styled.section`
         border-top: 1px dashed ${props => props.theme.secondary};
       }
     }
+    &__block {
+      &_description {
+        max-width: 80%;
+      }
+      &_dates {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+      }
+    }
     &__name {
       font-size: 20px;
       line-height: 26px;
@@ -376,6 +391,14 @@ export const WorkflowBlock = styled.section`
       white-space: pre-wrap;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
+    }
+    &__date {
+      &-separator {
+        width: 15px;
+        height: 2px;
+        margin: 3px 0;
+        border-bottom: 2px solid ${props => props.theme.secondary};
+      }
     }
     &__no-items{
       margin-top: 10px;
@@ -403,8 +426,11 @@ export const CoursesBlock = styled.section`
   padding: 30px 0;
   .course {
     position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-top: 15px;
-    padding: 10px 44px 10px 20px;
+    padding: 10px 65px 10px 20px;
     border-left: 4px solid transparent;
     cursor: pointer;
     &:hover {
@@ -421,17 +447,32 @@ export const CoursesBlock = styled.section`
     &s__wrapper {
       padding-top: 10px;
     }
+    &__block {
+      &_dates {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+      }
+    }
     &__name {
       font-size: 25px;
       line-height: 32px;
       font-weight: 600;
+    }
+    &__date {
+      &-separator {
+        width: 15px;
+        height: 2px;
+        margin: 3px 0;
+        border-bottom: 2px solid ${props => props.theme.secondary};
+      }
     }
     &__no-items {
       margin-top: 10px;
       text-align: center;
     }
     .controls {
-      top: 11px;
       clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
     }
   }
@@ -455,7 +496,22 @@ export const AssignmentBlock = styled.section`
         margin-left: 10px;
       }
     }
+    &__details {
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      margin-top: 15px;
+    }
     &__grade {
+      margin-right: 15px;
+      padding-right: 15px;
+      font-weight: 600;
+      border-right: 1px solid ${props => props.theme.secondary};
+    }
+    &__dates {
+
+    }
+    &__grade-input {
       width: 55px;
       font-weight: 500;
       font-size: 16px;
@@ -603,6 +659,7 @@ export const AssignmentAnswerBlock = styled.section`
     &__submitted {
       position: relative;
       min-height: 42px;
+      padding-right: 65px;
       &:hover {
         .controls {
           clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
@@ -619,7 +676,6 @@ export const AssignmentAnswerBlock = styled.section`
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      padding-right: 44px;
       line-height: 20px;
       > * + * {
         margin-left: 15px;
@@ -654,14 +710,7 @@ export const StudentsAnswersBlock = styled.section`
     }
     &__section {
       &_info {
-        width: 60%;
-      }
-      &_labels {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 5px;
-        width: 30%;
+        width: 80%;
       }
       &_grade {
         width: fit-content;
@@ -690,14 +739,6 @@ export const StudentsAnswersBlock = styled.section`
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
-    }
-    &__label {
-      width: fit-content;
-      padding: 3px 5px;
-      color: ${props => props.theme.secondary};
-      background-color: ${props => props.theme.highlights + "1a"};
-      border-radius: 5px;
-      transition: .1s all;
     }
   }
 `;
@@ -901,6 +942,12 @@ export const RegistrationBlock = styled.div`
     padding: 30px 25px;
     border-radius: 5px;
     box-shadow: 0 0 5px 1px #00000080;
+    &__field + .registration__field,
+    &__field + .registration__checkbox-wrapper,
+    &__field + .registration__date-wrapper,
+    &__checkbox-wrapper +  .registration__field{
+      margin-top: 15px;
+    }
     &__form {
       display: flex;
       flex-direction: column;
@@ -908,11 +955,8 @@ export const RegistrationBlock = styled.div`
       align-items: center;
       width: 100%;
     }
-    &__password {
-      margin-top: 15px;
-    }
     &__submit,
-    &__registration {
+    &__redirect {
       width: fit-content;
       margin: 0 auto;
       padding: 5px 15px;
@@ -958,6 +1002,46 @@ export const RegistrationBlock = styled.div`
       }
       ::after {
         left: calc(100% + 13px);
+      }
+    }
+    &__checkbox {
+      display: none;
+      &-wrapper {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 20px;
+        line-height: 26px;
+        padding: 9px 0;
+        cursor: pointer;
+        -webkit-user-select: none;
+            -ms-user-select: none;
+                user-select: none;
+      }
+      &-box {
+        display: block;
+        width: 100px;
+        padding: 2px 7px;
+        font-weight: 600;
+        text-align: center;
+        border: 2px dotted #353535;
+        border-radius: 5px;
+      }
+    }
+    &__date {
+      &-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        align-self: flex-start;
+        width: 100%;
+      }
+      &-text {
+        font-size: 16px;
+        line-height: 21px;
+        white-space: nowrap;
+        padding-left: 5px;
+        margin-right: 15px; 
       }
     }
     input {
@@ -1072,10 +1156,11 @@ export const AlertBlock = styled.div`
   border-radius: 8px;
   color: inherit;
   background-color: inherit;
-  box-shadow: 0 0 5px 1px ${props => props.theme.highlights + '33'};
+  box-shadow: 0 0 5px 1px ${props => props.theme ? props.theme.highlights + '33' : '#00000033'};
   text-align: center;
   transition: .1s all;
   z-index: 30;
+  cursor: pointer;
   &.alert_hidden {
     bottom: -50px;
     transition: .1s all;

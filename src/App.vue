@@ -27,6 +27,9 @@
       goTo(here) {
         this.$router.push(here)
       },
+      formatDate(date) {
+        return date.substring(0, 9).replaceAll('-','/')
+      },
     },
     computed: {
       getRoute() {
@@ -36,7 +39,8 @@
     provide() {
       return {
         ifRouteNameIs: this.ifRouteNameIs,
-        goTo: this.goTo
+        goTo: this.goTo,
+        formatDate: this.formatDate,
       }
     },
   }

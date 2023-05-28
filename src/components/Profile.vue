@@ -1,50 +1,5 @@
 <template>
-  <AssignmentBlock
-    :theme="theme"
-  >
-    <div class="assignment">
-      <div class="assignment__group">
-        <TitleBlock>{{ currentAssignment.name }}</TitleBlock>
-        <div class="assignment__btn">Rate The Answer</div>
-      </div>
-      <div class="assignment__description">{{ currentAssignment.description }}</div>
-    </div>
-  </AssignmentBlock>
-  <AnswerInfoBlock
-    :theme="theme"
-  >
-    <SubtitleBlock>{{ answer.studentName + ' ' + answer.studentSurname + ' - ' + answer.studentGroup }}</SubtitleBlock>
-    <div class="answer-info__line answer-info__line_grade">
-      <span class="answer-info__line-title">Grade:</span>
-      {{ answer.answerGrade }}/{{ answer.maxGrade }}
-    </div>
-    <div class="answer-info__line answer-info__line_link">
-      <span class="answer-info__line-title">GitHub Link:</span>
-      <a :href="answer.answerLink">{{ answer.answerLink }}</a>
-    </div>
-    <div class="answer-info__line answer-info__line_document">
-      <span class="answer-info__line-title">Report:</span>
-      <a :href="answer.answerLink">{{ answer.answerFileName }}</a>
-    </div>
-    <div class="answer-info__line answer-info__line_comment">
-      <span class="answer-info__line-title">Comment:</span>
-      {{ answer.answerComment }}
-    </div>
-    <div class="answer-info__line answer-info__line_comment">
-      <span class="answer-info__line-title">Inspections:</span>
-      <div class="answer-info__line-labels">
-        <div
-          class="answer-info__label"
-          v-for="label in answer.labels"
-          :key="label.name"
-        >
-          {{ label.name }}
-          <span v-if="label.passed">✔</span>
-          <span v-else>✘</span>
-        </div>
-      </div>
-    </div>
-  </AnswerInfoBlock>
+  
   <!-- for activity pass data with props -->
   <Activity
     :theme="theme"
@@ -77,46 +32,41 @@ export default {
   inject: ['theme'],
   data() {
     return ({
-      answer: {
-        answerID: "a1234",
-        answerTitle: "My Answer Title 2",
-        answerLink: "https://github.com/dimas7001/ghsh",
-        answerComment: "Sleeper shark basking shark: sea chub convict cichlid velvet-belly shark galjoen fish, tripletail; longfin dragonfish. Sleeper shark basking shark: sea chub convict cichlid velvet-belly shark galjoen fish, tripletail; longfin dragonfish.",
-        answerFileName: "dummy_file.pdf",
-        answerGrade: 9,
-        maxGrade: 10,
-        studentName: "Name",
-        studentSurname: "Surname",
-        studentGroup: "IS-93",
-        labels: [
-          {
-            name: '.gitigrore',
-            passed: true
-          },
-          {
-            name: 'readme',
-            passed: false
-          },
-          {
-            name: 'somethigelse.html',
-            passed: true
-          },
-          {
-            name: 'dontreadme',
-            passed: false
-          }
-        ]
-      },
+      profileInfo: {}
     })
   },
   methods: {
     
   },
   computed: {
-    ...mapGetters(['getAssignment', 'getUserRole']),
+    ...mapGetters(['getUserIsStudent']),
     currentAssignment() {
-      return this.getAssignment(this.$route.params.assignmentID)
+      return {}
     },
   },
 }
+
+// { profile for student
+//     "id": 1,
+//     "firstname": "John",
+//     "lastname": "Doe",
+//     "group": "Group A",
+//     "age": 21,
+//     "email": "johndoe@example.com",
+//     "telegram_contact": "@johndoe",
+//     "registration_date": "2023-01-08T12:30:00.000+00:00",
+//     "passed_tasks": []
+// }
+
+// { profile for teacher
+//     "id": 1,
+//     "firstname": "Kostyantin",
+//     "lastname": "Zhereb",
+//     "email": "koszher@gmail.com",
+//     "age": 33,
+//     "telegram_contact": "zhereb"
+// }
+
+
 </script>
+

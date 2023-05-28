@@ -19,7 +19,7 @@
     >
       <div
         class="wf-item__wrapper"
-        v-for="assignment in getAssignments"
+        v-for="assignment in currentAssignments"
         @click="goTo({ name: 'assignment', params: { assignmentID: `${assignment.id}` } })"
         :key="assignment.id"
       >
@@ -28,13 +28,24 @@
           :id="assignment.id"
           v-cloak
         >
-          <div class="wf-item__name">
-            {{ assignment.name }}
+          <div class="wf-item__block wf-item__block_description">
+            <div class="wf-item__name">
+              {{ assignment.title }}
+            </div>
+            <div
+              class="wf-item__descr"
+              v-html="assignment.description"
+            ></div>
           </div>
-          <div
-            class="wf-item__descr"
-            v-html="assignment.description"
-          ></div>
+          <div class="wf-item__block wf-item__block_dates">
+            <div class="wf-item__date">
+              {{ formatDate(assignment.startDate) }}
+            </div>
+            <div class="wf-item__date-separator"></div>
+            <div class="wf-item__date">
+              {{ formatDate(assignment.endDate) }}
+            </div>
+          </div>
           <Controls
             class="controls"
             :theme="theme"
@@ -83,10 +94,59 @@ export default {
     
   },
   emits: ['toggle-overlay', 'toggle-alert'],
-  inject: ['theme', 'themeInfo', 'goTo'],
+  inject: ['theme', 'themeInfo', 'goTo', 'formatDate'],
   data() {
     return ({
-
+      course: {
+        id: 1,
+        "title": "Back-end",
+        "description": "Course for Back-end developers",
+        "educator": "Kostyantin Zhereb",
+        "tasks": [
+          {
+            "id": 1,
+            "title": "Database Fundamentals",
+            description: "Learn the basics of database design and management",
+            "startDate": "2023-01-08T12:30:00.000+00:00",
+            "endDate": "2023-01-08T12:30:00.000+00:00",
+            "max_point": 8.0
+          },
+          {
+            "id": 2,
+            "title": "SQL Queries",
+            "description": "Learn how to write SQL queries to retrieve and manipulate data",
+            "startDate": "2023-01-10T12:30:00.000+00:00",
+            "endDate": "2023-01-15T12:30:00.000+00:00",
+            "max_point": 9.0
+          },
+          {
+            "id": 3,
+            "title": "Server-side Scripting",
+            "description": "Learn how to write server-side scripts using PHP",
+            "startDate": "2023-01-16T12:30:00.000+00:00",
+            "endDate": "2023-01-20T12:30:00.000+00:00",
+            "max_point": 9.0
+          },
+          {
+            "id": 4,
+            "title": "API Development",
+            "description": "Learn how to develop RESTful APIs for web applications",
+            "startDate": "2023-01-21T12:30:00.000+00:00",
+            "endDate": "2023-01-23T12:30:00.000+00:00",
+            "max_point": 10.0
+          },
+          {
+            "id": 5,
+            "title": "Security and Authentication",
+            "description": "Learn about web application security and authentication techniques",
+            "startDate": "2023-01-24T12:30:00.000+00:00",
+            "endDate": "2023-01-30T12:30:00.000+00:00",
+            "max_point": 10.0
+          }
+        ],
+        "start_date": "2023-01-08T12:30:00.000+00:00",
+        "end_date": "2023-03-08T12:30:00.000+00:00"
+      }
     })
   },
   methods: {
@@ -117,10 +177,13 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['getAssignments', 'getAccessToken']),
+    ...mapGetters(['getCourseAssignments', 'getAccessToken']),
     anyAssignmentExist() {
-      return this.getAssignments ? true : false
-    }
+      return this.currentAssignments ? true : false
+    },
+    currentAssignments() {
+      return this.course.tasks
+    },
   },
   watch: {
     $props: {

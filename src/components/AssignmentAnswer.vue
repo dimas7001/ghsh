@@ -6,7 +6,7 @@
       <SubtitleBlock>Your Answer</SubtitleBlock>
       <div
         class="assignment-answer__form"
-        v-if="!isSubmitted"
+        v-if="!existingAnswerEmpty"
       >
         <div class="assignment-answer__group">
           <label
@@ -47,7 +47,7 @@
                 :src="require(`@/assets/img/icons/file/file_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
                 alt="add_file"
               >
-              <span>{{ assignmentFormData.assignmentFileName }}</span>
+              <span>{{ assignmentFormData.assignmentFile.name }}</span>
             </div>
           </label>
           <input
@@ -56,7 +56,7 @@
             name="assignment-answer-file"
             type="file"
             accept="application/pdf"
-            @change="submitFile"
+            @change="updateFileInfo"
           >
           <div
             class="assignment-answer__submit"
@@ -72,26 +72,26 @@
         <div class="assignment-answer__head">
           <a
             class="assignment-answer__link"
-            :href="existingAnswer.answerLink"
+            :href="existingAnswer.github_reference"
             target="_blank"
-          >{{ existingAnswer.answerLink }}</a>
+          >{{ existingAnswer.github_reference }}</a>
           <a
             class="assignment-answer__file-name"
-            :href="existingAnswer.answerLink"
-            v-if="existingAnswer.answerFileName"
-          >{{ existingAnswer.answerFileName }}</a>
+            :href="existingAnswer.reference"
+            v-if="existingAnswer.reference"
+          >{{ existingAnswer.reference }}</a>
         </div>
         <div
           class="assignment-answer__comment"
-          v-if="existingAnswer.answerComment"
-        >{{ existingAnswer.answerComment }}</div>
+          v-if="existingAnswer.student_comment"
+        >{{ existingAnswer.student_comment }}</div>
         <Controls
           class="controls"
           :theme="theme"
         >
           <div
             class="controls__delete"
-            @click.stop="deleteAnswer(existingAnswer.answerID)"
+            @click.stop="deleteAnswer(existingAnswer.id)"
           >
             <img
               :src="require(`@/assets/img/icons/delete/delete_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
@@ -118,32 +118,41 @@ export default {
   components: {
     AssignmentAnswerBlock, SubtitleBlock, Controls
   },
-  emits: ['toggle-overlay', 'toggle-alert'],
+  emits: ['toggle-alert', 'update-current-grade'],
   inject: ['theme', 'themeInfo', 'goTo'],
   data() {
     return ({
-      isSubmitted: false,
       assignmentFormData: {
         assignmentTitle: "",
         assignmentLink: "",
         assignmentComment: "",
-        assignmentFileName: "",
+        assignmentFile: "",
       },
       existingAnswer: {
-        answerID: "a1234",
-        answerTitle: "My Answer Title 1",
-        answerLink: "https://github.com/dimas7001/ghsh",
-        answerComment: "Sleeper shark basking shark: sea chub convict cichlid velvet-belly shark galjoen fish, tripletail; longfin dragonfish.",
-        answerFileName: "dummy_file.pdf",
+        // "id": 1,
+        // "reference": "lab1_john.pdf",
+        // "point": 8.0,
+        // "task": {
+        //   "id": 1,
+        //   "title": "Database Fundamentals",
+        //   "max_point": 8.0
+        // },
+        // "github_reference": "https://github.com/UnforgettableDew/SecurityPart",
+        // "is_assessed": true,
+        // "educator_comment": "great",
+        // "student_comment": "Long-finned char silver dollar yellowtail clownfish mooneye slimy mackerel rohu roosterfish rockling fire bar danio icefish cow shark.",
+        // "submission_date": "2023-01-08T12:30:00.000+00:00"
       },
     })
   },
   methods: {
-    async submitFile(e) {
-      const file = e.target.files[0];
-
+    updateFileInfo(e) {
+      console.log(e.target.files[0])
+      this.assignmentFormData.assignmentFile = e.target.files[0]
+    },
+    async submitFile() {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', this.assignmentFormData.assignmentFile);
 
       axios.post('http://25.59.188.46:8080/api/v1/student/course/3/task/11/lab/40/upload', formData, {
         headers: {
@@ -164,6 +173,15 @@ export default {
     formDataEnough() {
       return this.assignmentFormData.assignmentLink
     },
+    existingAnswerEmpty() {
+      return Object.keys(this.existingAnswer).length ? true : false
+    },
   },
 }
+
+// { form data
+//     "github_reference": "https://github.com/amigoscode/microservices",
+//     "student_comment": "sexik nash lubimyi"
+// }
+
 </script>

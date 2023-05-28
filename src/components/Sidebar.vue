@@ -32,7 +32,7 @@
           class="sidebar__item"
           :class="{
             'sidebar__item_active': ifRouteNameIs(['course', 'assignment', 'answer']),
-            'sidebar__item_inactive': !getCurrentCourseID
+            'sidebar__item_inactive': ifRouteNameIs(['courses'])
           }"
           @click="goTo({ name: 'course' })"
         >
@@ -46,7 +46,7 @@
           class="sidebar__item"
           :class="{
             'sidebar__item_active': ifRouteNameIs(['students']),
-            'sidebar__item_inactive': !getCurrentCourseID
+            'sidebar__item_inactive': ifRouteNameIs(['courses'])
           }"
           @click="goTo({ name: 'students' })"
         >
@@ -60,7 +60,7 @@
           class="sidebar__item"
           :class="{
             'sidebar__item_active': ifRouteNameIs(['statistics']),
-            'sidebar__item_inactive': !getCurrentCourseID
+            'sidebar__item_inactive': ifRouteNameIs(['courses'])
           }"
           @click="goTo({ name: 'statistics' })"
         >
@@ -107,7 +107,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['getCurrentCourseID']),
+    
   },
 }
 </script>
