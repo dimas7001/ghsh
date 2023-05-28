@@ -34,7 +34,7 @@
 import {
   SubtitleBlock,
   StudentsAnswersBlock
-} from "../styles/styledBlocks.js"
+} from "@/styles/styledBlocks.js"
 
 export default {
   name: 'StudentsAnswers',

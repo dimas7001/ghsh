@@ -82,7 +82,7 @@ import {
   TitleBlock,
   SubtitleBlock,
   AnswerInfoBlock,
-} from "../styles/styledBlocks.js"
+} from "@/styles/styledBlocks.js"
 import { mapGetters } from 'vuex'
 
 export default {

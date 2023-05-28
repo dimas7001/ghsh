@@ -1,33 +1,53 @@
 <template>
-  <AssignmentBlock
-    :theme="theme"
-  >
-    <div class="assignment">
-      <div class="assignment__group">
-        <TitleBlock>{{ currentAssignment.title }}</TitleBlock>
-        <div class="assignment__btn">Edit</div>
-      </div>
-      <div class="assignment__description">{{ currentAssignment.description }}</div>
-      <div class="assignment__details">
-        <div class="assignment__grade">
-          <span
-            v-if="getUserIsStudent"
-          >{{ currentGrade + '/' + currentAssignment.max_point }} points</span>
-          <span
-            v-else
-          >max. {{ currentAssignment.max_point }} points</span>
-        </div>
-        <div class="assignment__dates">{{ formatDate(currentAssignment.startDate) + ' – ' + formatDate(currentAssignment.endDate) }}</div>
-      </div>
+  <form>
+    <br><br>
+    <input
+      class=""
+      placeholder="Assignment name"
+      type="text"
+      v-model="assignment.title"
+    >
+    <br>
+    <input
+      class=""
+      placeholder="Assignment description"
+      type="text"
+      v-model="assignment.description"
+    >
+    <br>
+    <input
+      class=""
+      placeholder="Assignment max. grade"
+      type="number"
+      v-model="assignment.max_point"
+    >
+    <br>
+    <input
+      class=""
+      type="date"
+      v-model="assignment.startDate"
+    >
+    <br>
+    <input
+      class=""
+      type="date"
+      v-model="assignment.endDate"
+    >
+    <br>
+    <input
+      class=""
+      placeholder="Assignment files inspections"
+      type="text"
+      v-model="inspections"
+    >
+    <br><br>
+    <div
+      class="btn"
+      @click="login"
+    >
+      ||Send||
     </div>
-  </AssignmentBlock>
-  <AssignmentAnswer
-    v-if="getUserIsStudent"
-    :update-current-grade="updateCurrentGrade"
-  />
-  <StudentsAnswers
-    v-else
-  />
+  </form>
 </template>
 
 <script>
@@ -48,14 +68,14 @@ export default {
   inject: ['theme', 'formatDate'],
   data() {
     return ({
-      currentGrade: '-',
+      inspections: "README.md",
       assignment: {
         "id": 1,
         "title": "Database Fundamentals",
         description: "Mummichog; orange roughy mora deep sea anglerfish bluntnose knifefish Chinook salmon titan triggerfish, brook lamprey?",
         "startDate": "2023-01-08T12:30:00.000+00:00",
         "endDate": "2023-01-08T12:30:00.000+00:00",
-        "max_point": 8.0
+        "max_point": 8.0,
       },
     })
   },
@@ -71,4 +91,8 @@ export default {
     },
   },
 }
+
+
+
+//custom checks field as an input with " ;" separation
 </script>

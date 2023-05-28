@@ -39,6 +39,15 @@
           :theme="theme"
         >
           <div
+            class="controls__edit"
+            @click.stop="this.goTo({ name: 'edit_course', params: { courseID: `${course.id}` } })"
+          >
+            <img
+              :src="require(`@/assets/img/icons/edit/edit_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
+              alt="edit"
+            >
+          </div>
+          <div
             class="controls__delete"
             @click.stop="deleteCourse(course.id)"
           >
@@ -55,7 +64,7 @@
 </template>
 
 <script>
-import { CoursesBlock, TitleBlock, NewItemBlock, Controls } from "../styles/styledBlocks.js"
+import { CoursesBlock, TitleBlock, NewItemBlock, Controls } from "@/styles/styledBlocks.js"
 import { mapGetters, mapMutations } from 'vuex'
 
 export default {
@@ -180,7 +189,7 @@ export default {
       this.goTo({ name: 'course', params: { courseID: `${id}` } })
     },
     addCourse() {
-      console.log("add_course triggered")
+      this.goTo({ name: 'create_course'})
     },
   },
   computed: {
@@ -189,11 +198,4 @@ export default {
     },
   },
 }
-
-// { post, create course
-//     "title": "Computer Science",
-//     "description": "Computer Science description"
-// }
-
-
 </script>

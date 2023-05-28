@@ -11,7 +11,7 @@
 import {
   SubtitleBlock,
   CommitsBlock
-} from "../styles/styledBlocks.js"
+} from "@/styles/styledBlocks.js"
 
 export default {
   name: 'StudentsList',

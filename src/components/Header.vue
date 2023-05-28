@@ -50,6 +50,7 @@
         <img
           class="header__settings"
           :src="require(`@/assets/img/icons/gear/gear_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
+          @click="goTo({ name: 'settings'})"
         >
       </div>
     </ContainerHeader>
@@ -68,6 +69,6 @@ export default {
     sidebarHidden: Boolean,
   },
   emits: ['toggle-sidebar', 'update-theme', 'update-theme-mode'],
-  inject: ['theme', 'themeInfo'],
+  inject: ['theme', 'themeInfo', 'goTo'],
 }
 </script>

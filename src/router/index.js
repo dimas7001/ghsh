@@ -21,6 +21,11 @@ const routes = [
                 name: 'answer',
                 component: () => import('../views/MainView.vue'),
               },
+              {
+                path: 'edit',
+                name: 'edit_assignment',
+                component: () => import('../views/MainView.vue'),
+              },
             ]
           },
           {
@@ -38,7 +43,22 @@ const routes = [
             name: 'statistics',
             component: () => import('../views/MainView.vue'),
           },
+          {
+            path: 'edit',
+            name: 'edit_course',
+            component: () => import('../views/MainView.vue'),
+          },
+          {
+            path: 'create_assignment',
+            name: 'create_assignment',
+            component: () => import('../views/MainView.vue'),
+          },
         ]
+      },
+      {
+        path: 'create_course',
+        name: 'create_course',
+        component: () => import('../views/MainView.vue'),
       },
     ]
   },
@@ -56,6 +76,11 @@ const routes = [
     path: '/complete_registration',
     name: 'complete_registration',
     component: () => import('../views/EnterView.vue')
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: () => import('../views/MainView.vue')
   },
   {
     path: '/:pathMatch(.*)*',

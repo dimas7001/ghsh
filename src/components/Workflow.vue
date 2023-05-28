@@ -11,7 +11,7 @@
     <NewItemBlock
       :theme="theme"
       class="courses__create"
-      @click="addArticle"
+      @click="goTo({ name: 'create_assignment'})"
     />
     <div
       class="wf-item__group"
@@ -52,7 +52,7 @@
           >
             <div
               class="controls__edit"
-              @click.stop="$emit('toggle-overlay', 'edit', assignment.id, assignment.name, assignment.description)"
+              @click.stop="goTo({ name: 'edit_assignment', params: { assignmentID: `${assignment.id}` } })"
             >
               <img
                 :src="require(`@/assets/img/icons/edit/edit_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import { SearchBlock, WorkflowBlock, TitleBlock, Controls, NewItemBlock } from "../styles/styledBlocks.js"
+import { SearchBlock, WorkflowBlock, TitleBlock, Controls, NewItemBlock } from "@/styles/styledBlocks.js"
 import { mapGetters, mapMutations } from 'vuex'
 import axios from 'axios'
 

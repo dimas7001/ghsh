@@ -15,7 +15,7 @@
 import {
   ActivityBlock,
   SubtitleBlock
-} from "../styles/styledBlocks.js"
+} from "@/styles/styledBlocks.js"
 import { Chart, registerables } from 'chart.js'
 
 Chart.register(...registerables)

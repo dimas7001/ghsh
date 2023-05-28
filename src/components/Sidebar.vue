@@ -31,8 +31,8 @@
         <div
           class="sidebar__item"
           :class="{
-            'sidebar__item_active': ifRouteNameIs(['course', 'assignment', 'answer']),
-            'sidebar__item_inactive': ifRouteNameIs(['courses'])
+            'sidebar__item_active': ifRouteNameIs(['course', 'assignment', 'answer', 'create_course', 'edit_course', 'create_assignment', 'edit_assignment']),
+            'sidebar__item_inactive': ifRouteNameIs(['courses', 'settings'])
           }"
           @click="goTo({ name: 'course' })"
         >
@@ -46,7 +46,7 @@
           class="sidebar__item"
           :class="{
             'sidebar__item_active': ifRouteNameIs(['students']),
-            'sidebar__item_inactive': ifRouteNameIs(['courses'])
+            'sidebar__item_inactive': ifRouteNameIs(['courses', 'settings'])
           }"
           @click="goTo({ name: 'students' })"
         >
@@ -60,7 +60,7 @@
           class="sidebar__item"
           :class="{
             'sidebar__item_active': ifRouteNameIs(['statistics']),
-            'sidebar__item_inactive': ifRouteNameIs(['courses'])
+            'sidebar__item_inactive': ifRouteNameIs(['courses', 'settings'])
           }"
           @click="goTo({ name: 'statistics' })"
         >

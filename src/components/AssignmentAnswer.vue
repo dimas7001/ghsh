@@ -109,7 +109,7 @@ import {
   AssignmentAnswerBlock,
   SubtitleBlock,
   Controls,
-} from "../styles/styledBlocks.js"
+} from "@/styles/styledBlocks.js"
 import { mapGetters } from 'vuex'
 import axios from 'axios'
 

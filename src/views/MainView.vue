@@ -30,6 +30,15 @@
       <Statistics
         v-if="ifRouteNameIs(['statistics'])"
       />
+      <CreateEditCourse
+        v-if="ifRouteNameIs(['create_course', 'edit_course'])"
+      />
+      <CreateEditAssignment
+        v-if="ifRouteNameIs(['create_assignment', 'edit_assignment'])"
+      />
+      <Settings
+        v-if="ifRouteNameIs(['settings'])"
+      />
       <Answer
         v-if="ifRouteNameIs(['answer']) && !getUserIsStudent"
         @toggle-alert="toggleAlert"
@@ -58,6 +67,9 @@ import Workflow from '@/components/Workflow.vue'
 import Assignment from '@/components/Assignment.vue'
 import StudentsList from '@/components/StudentsList.vue'
 import Statistics from '@/components/Statistics.vue'
+import CreateEditCourse from '@/components/create_edit/CreateEditCourse.vue'
+import CreateEditAssignment from '@/components/create_edit/CreateEditAssignment.vue'
+import Settings from '@/components/Settings.vue'
 import Answer from '@/components/Answer.vue'
 import Overlay from '@/components/Overlay.vue'
 import Alert from '@/components/Alert.vue'
@@ -66,7 +78,7 @@ import { mapGetters, mapMutations } from 'vuex'
 export default {
   name: 'MainView',
   components: {
-    Body, Header, Sidebar, Container, Courses, Workflow, Assignment, StudentsList, Statistics, Answer, Overlay, Alert
+    Body, Header, Sidebar, Container, Courses, Workflow, Assignment, StudentsList, Statistics, CreateEditCourse, CreateEditAssignment, Settings, Answer, Overlay, Alert
   },
   data() {
     return {

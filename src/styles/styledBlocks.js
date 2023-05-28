@@ -430,7 +430,7 @@ export const CoursesBlock = styled.section`
     justify-content: space-between;
     align-items: center;
     margin-top: 15px;
-    padding: 10px 65px 10px 20px;
+    padding: 10px 100px 10px 20px;
     border-left: 4px solid transparent;
     cursor: pointer;
     &:hover {
