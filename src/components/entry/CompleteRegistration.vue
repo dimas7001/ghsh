@@ -104,13 +104,13 @@ export default {
   inject: ['ifRouteNameIs', 'goTo'],
   methods: {
     async register() {
-      await sendPOST(endpoints.register, {},
+      await sendPOST(endpoints.completeRegistrationStudent, {"Authorization": `Bearer ${this.getAccessToken}`},
         this.getUserIsStudent ? {
           "firstname": this.registrationData.name,
           "lastname": this.registrationData.surname,
           "email": this.registrationData.email,
           "telegram_contact": this.registrationData.telegram,
-          "birthday": this.registrationData.birthday
+          //"birthday": this.registrationData.birthday
         } : {
           "firstname": this.registrationData.name,
           "lastname": this.registrationData.surname,
@@ -139,7 +139,7 @@ export default {
     // }
   },
   computed: {
-    ...mapGetters(['getUserIsStudent']),
+    ...mapGetters(['getUserIsStudent', 'getAccessToken']),
     formDataFull() {
       return this.registrationData.name &&
              this.registrationData.surname &&

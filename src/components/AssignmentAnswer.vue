@@ -19,7 +19,7 @@
             id="assignment-answer-link"
             name="assignment-answer-link"
             type="link"
-            v-model="assignmentFormData.assignmentLink"
+            v-model="assignmentFormData.github_reference"
           >
         </div>
         <div class="assignment-answer__group">
@@ -33,7 +33,7 @@
             id="assignment-answer-comment"
             name="assignment-answer-comment"
             type="text"
-            v-model="assignmentFormData.assignmentComment"
+            v-model="assignmentFormData.student_comment"
           ></textarea>
         </div>
         <div class="assignment-answer__group assignment-answer__group_submit">
@@ -47,7 +47,7 @@
                 :src="require(`@/assets/img/icons/file/file_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
                 alt="add_file"
               >
-              <span>{{ assignmentFormData.assignmentFile.name }}</span>
+              <span>{{ assignmentFile.name }}</span>
             </div>
           </label>
           <input
@@ -60,7 +60,7 @@
           >
           <div
             class="assignment-answer__submit"
-            :class="{'assignment-answer__submit_inactive': !formDataEnough}"
+            :class="{'assignment-answer__submit_inactive': formDataEnough}"
             @click="submitAnswer"
           >Submit ✔</div>
         </div>
@@ -91,7 +91,7 @@
         >
           <div
             class="controls__delete"
-            @click.stop="deleteAnswer(existingAnswer.id)"
+            @click.stop="deleteAnswer"
           >
             <img
               :src="require(`@/assets/img/icons/delete/delete_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
@@ -112,6 +112,8 @@ import {
 } from "@/styles/styledBlocks.js"
 import { mapGetters } from 'vuex'
 import axios from 'axios'
+import { sendPOST, sendGET, sendDELETE } from "@/requests/requests"
+import endpoints from '@/requests/endpoints'
 
 export default {
   name: 'AssignmentAnswer',
@@ -122,11 +124,10 @@ export default {
   inject: ['theme', 'themeInfo', 'goTo'],
   data() {
     return ({
+      assignmentFile: '',
       assignmentFormData: {
-        assignmentTitle: "",
-        assignmentLink: "",
-        assignmentComment: "",
-        assignmentFile: "",
+        github_reference: "",
+        student_comment: "",
       },
       existingAnswer: {
         // "id": 1,
@@ -148,13 +149,23 @@ export default {
   methods: {
     updateFileInfo(e) {
       console.log(e.target.files[0])
-      this.assignmentFormData.assignmentFile = e.target.files[0]
+      this.assignmentFile = e.target.files[0]
+    },
+    async submitAnswer() {
+      await sendPOST(endpoints.submitAnswer(this.routeParams.courseID, this.routeParams.assignmentID), {"Authorization": `Bearer ${this.getAccessToken}`}, this.assignmentFormData)
+      .then(res => {
+        if (res.successful_action) {
+          console.log(res)
+          //this.goTo({ name: 'course' })
+        }
+      })
+      this.submitFile()
     },
     async submitFile() {
       const formData = new FormData();
-      formData.append('file', this.assignmentFormData.assignmentFile);
+      formData.append('file', this.assignmentFile);
 
-      axios.post('http://25.59.188.46:8080/api/v1/student/course/3/task/11/lab/40/upload', formData, {
+      axios.post(endpoints.uploadAnswerFile(this.routeParams.courseID, this.routeParams.assignmentID), formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           "Authorization": `Bearer ${this.getAccessToken}`
@@ -166,7 +177,18 @@ export default {
       .catch(error => {
         console.error(error);
       });
-    }
+    },
+    async deleteAnswer() {
+      await sendDELETE(
+        endpoints.deleteSubmittedAnswer(this.routeParams.courseID, this.routeParams.assignmentID),
+        {"Authorization": `Bearer ${this.getAccessToken}`}
+      )
+      .then(res => {
+        if (res.successful_action) {
+          console.log(res)
+        }
+      })
+    },
   },
   computed: {
     ...mapGetters(['getAccessToken']),
@@ -176,7 +198,23 @@ export default {
     existingAnswerEmpty() {
       return Object.keys(this.existingAnswer).length ? true : false
     },
+    routeParams() {
+      return this.$route.params
+    },
+
   },
+  async mounted() {
+    await sendGET(
+      endpoints.submittedAnswer(this.routeParams.courseID, this.routeParams.assignmentID),
+      {"Authorization": `Bearer ${this.getAccessToken}`}
+    )
+    .then(res => {
+      if (res.id) {
+        this.existingAnswer = res
+        // this.$emit("update-current-grade", res.point)
+      }
+    })
+  }
 }
 
 // { form data

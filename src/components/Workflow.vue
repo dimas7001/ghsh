@@ -3,6 +3,7 @@
     :theme="theme"
   >
     <TitleBlock>Course Title</TitleBlock>
+    <div>{{ course.description }}</div>
     <!-- <div class="wf-item__group">
       <div
         @click="downloadFile"
@@ -39,11 +40,11 @@
           </div>
           <div class="wf-item__block wf-item__block_dates">
             <div class="wf-item__date">
-              {{ formatDate(assignment.startDate) }}
+              {{ formatDate(assignment.start_date) }}
             </div>
             <div class="wf-item__date-separator"></div>
             <div class="wf-item__date">
-              {{ formatDate(assignment.endDate) }}
+              {{ formatDate(assignment.end_date) }}
             </div>
           </div>
           <Controls
@@ -84,6 +85,8 @@
 import { SearchBlock, WorkflowBlock, TitleBlock, Controls, NewItemBlock } from "@/styles/styledBlocks.js"
 import { mapGetters, mapMutations } from 'vuex'
 import axios from 'axios'
+import { sendPOST, sendGET, sendDELETE } from "@/requests/requests"
+import endpoints from "@/requests/endpoints"
 
 export default {
   name: 'Workflow',
@@ -107,40 +110,40 @@ export default {
             "id": 1,
             "title": "Database Fundamentals",
             description: "Learn the basics of database design and management",
-            "startDate": "2023-01-08T12:30:00.000+00:00",
-            "endDate": "2023-01-08T12:30:00.000+00:00",
+            "start_date": "2023-01-08T12:30:00.000+00:00",
+            "end_date": "2023-01-08T12:30:00.000+00:00",
             "max_point": 8.0
           },
           {
             "id": 2,
             "title": "SQL Queries",
             "description": "Learn how to write SQL queries to retrieve and manipulate data",
-            "startDate": "2023-01-10T12:30:00.000+00:00",
-            "endDate": "2023-01-15T12:30:00.000+00:00",
+            "start_date": "2023-01-10T12:30:00.000+00:00",
+            "end_date": "2023-01-15T12:30:00.000+00:00",
             "max_point": 9.0
           },
           {
             "id": 3,
             "title": "Server-side Scripting",
             "description": "Learn how to write server-side scripts using PHP",
-            "startDate": "2023-01-16T12:30:00.000+00:00",
-            "endDate": "2023-01-20T12:30:00.000+00:00",
+            "start_date": "2023-01-16T12:30:00.000+00:00",
+            "end_date": "2023-01-20T12:30:00.000+00:00",
             "max_point": 9.0
           },
           {
             "id": 4,
             "title": "API Development",
             "description": "Learn how to develop RESTful APIs for web applications",
-            "startDate": "2023-01-21T12:30:00.000+00:00",
-            "endDate": "2023-01-23T12:30:00.000+00:00",
+            "start_date": "2023-01-21T12:30:00.000+00:00",
+            "end_date": "2023-01-23T12:30:00.000+00:00",
             "max_point": 10.0
           },
           {
             "id": 5,
             "title": "Security and Authentication",
             "description": "Learn about web application security and authentication techniques",
-            "startDate": "2023-01-24T12:30:00.000+00:00",
-            "endDate": "2023-01-30T12:30:00.000+00:00",
+            "start_date": "2023-01-24T12:30:00.000+00:00",
+            "end_date": "2023-01-30T12:30:00.000+00:00",
             "max_point": 10.0
           }
         ],
@@ -151,9 +154,16 @@ export default {
   },
   methods: {
     ...mapMutations(['DELETE_ASSIGNMENT']),
-    deleteAssignment(id) {
-      // $emit('ask-question', 'Do you really want to delete this assignment?', this.DELETE_ASSIGNMENT)
-      this.DELETE_ASSIGNMENT(id)
+    async deleteAssignment(assignmentID) {
+      await sendDELETE(
+        endpoints.deleteAssignment(this.routeParams.courseID, assignmentID),
+        {"Authorization": `Bearer ${this.getAccessToken}`}
+      )
+      .then(res => {
+        if (res.successful_action) {
+          console.log(res)
+        }
+      })
     },
     async downloadFile() {
       axios({
@@ -177,12 +187,15 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['getCourseAssignments', 'getAccessToken']),
+    ...mapGetters(['getAccessToken']),
     anyAssignmentExist() {
       return this.currentAssignments ? true : false
     },
     currentAssignments() {
       return this.course.tasks
+    },
+    routeParams() {
+      return this.$route.params
     },
   },
   watch: {
@@ -202,5 +215,18 @@ export default {
         this.showHiddenNotes()
     },
   },
+  async mounted() {
+    await sendGET(
+      this.getUserIsStudent ?
+      endpoints.courseByIDStudent(this.$route.params.courseID) :
+      endpoints.courseByIDTeacher(this.$route.params.courseID),
+      {"Authorization": `Bearer ${this.getAccessToken}`}
+    )
+    .then(res => {
+      if (res) {
+        this.course = res
+      }
+    })
+  }
 }
 </script>

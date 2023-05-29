@@ -116,7 +116,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['idExists']),  //vuex getters helper
+    
   },
   watch: {
     $props: {

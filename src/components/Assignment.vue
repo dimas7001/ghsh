@@ -5,6 +5,9 @@
     <div class="assignment">
       <div class="assignment__group">
         <TitleBlock>{{ currentAssignment.title }}</TitleBlock>
+        <div
+          @click="downloadFile"
+        >||downloadFile||</div>
         <div class="assignment__btn">Edit</div>
       </div>
       <div class="assignment__description">{{ currentAssignment.description }}</div>
@@ -17,7 +20,7 @@
             v-else
           >max. {{ currentAssignment.max_point }} points</span>
         </div>
-        <div class="assignment__dates">{{ formatDate(currentAssignment.startDate) + ' – ' + formatDate(currentAssignment.endDate) }}</div>
+        <div class="assignment__dates">{{ formatDate(currentAssignment.start_date) + ' – ' + formatDate(currentAssignment.end_date) }}</div>
       </div>
     </div>
   </AssignmentBlock>
@@ -38,6 +41,9 @@ import {
   TitleBlock
 } from "@/styles/styledBlocks.js"
 import { mapGetters } from 'vuex'
+import axios from 'axios'
+import { sendPOST, sendGET, sendPUT } from "@/requests/requests"
+import endpoints from "@/requests/endpoints"
 
 export default {
   name: 'Assignment',
@@ -53,8 +59,8 @@ export default {
         "id": 1,
         "title": "Database Fundamentals",
         description: "Mummichog; orange roughy mora deep sea anglerfish bluntnose knifefish Chinook salmon titan triggerfish, brook lamprey?",
-        "startDate": "2023-01-08T12:30:00.000+00:00",
-        "endDate": "2023-01-08T12:30:00.000+00:00",
+        "start_date": "2023-01-08T12:30:00.000+00:00",
+        "end_date": "2023-01-08T12:30:00.000+00:00",
         "max_point": 8.0
       },
     })
@@ -63,12 +69,46 @@ export default {
     updateCurrentGrade(grade) {
       this.currentGrade = grade
     },
+    async downloadFile() {
+      axios({
+        url: endpoints.downloadAssignmentFile(this.routeParams.courseID, this.routeParams.assignmentID),
+        method: 'GET',
+        headers: {"Authorization": `Bearer ${this.getAccessToken}`},
+        responseType: 'blob',
+      }).then((response) => {
+        var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+        var fileLink = document.createElement('a');
+      
+        fileLink.href = fileURL;
+        // console.log(fileURL)
+        fileLink.setAttribute('download', 'file.pdf');
+        document.body.appendChild(fileLink);
+      
+        fileLink.click();
+      })
+    },
   },
   computed: {
-    ...mapGetters(['getUserIsStudent']),
+    ...mapGetters(['getUserIsStudent', 'getAccessToken']),
     currentAssignment() {
       return this.assignment
     },
+    routeParams() {
+      return this.$route.params
+    }
   },
+  async mounted() {
+    await sendGET(
+      this.getUserIsStudent ?
+      endpoints.assignmentStudent(this.routeParams.courseID, this.routeParams.assignmentID) :
+      endpoints.assignmentTeacher(this.routeParams.courseID, this.routeParams.assignmentID),
+      {"Authorization": `Bearer ${this.getAccessToken}`}
+    )
+    .then(res => {
+      if (res) {
+        this.assignment = res
+      }
+    })
+  }
 }
 </script>

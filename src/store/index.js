@@ -4,10 +4,11 @@ export default createStore({
   state: {
     user: {
       userTokens: {
-        accessToken: "",
+        // accessToken: "eyJhbGciOiJIUzI1NiJ9.eyJ0b2tlbi10eXBlIjoiYWNjZXNzLXRva2VuIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfRURVQ0FUT1IifV0sInN1YiI6Imtvc3R5YSIsImlhdCI6MTY4NTI2MTU5NiwiZXhwIjoxNjg1ODYxNTk2fQ.2GGG09vHk7mJBe5-DnAQoZeNAA3v051vm6Z38S7c_1A",
+        accessToken: "eyJhbGciOiJIUzI1NiJ9.eyJ0b2tlbi10eXBlIjoiYWNjZXNzLXRva2VuIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfU1RVREVOVCJ9XSwic3ViIjoiU3J1ZGVudDEiLCJpYXQiOjE2ODUzNTc4MTIsImV4cCI6MTY4NTk1NzgxMn0.AvTuHpY06aKGVDpa216klMT6uebz9NtzO4dC2MUKt70",
         refreshToken: "",
       },
-      isStudent: false,
+      isStudent: true,
     },
     activeSection: "",
     courses: [
@@ -21,40 +22,40 @@ export default createStore({
             "id": 1,
             "title": "Database Fundamentals",
             description: "Learn the basics of database design and management",
-            "startDate": "2023-01-08T12:30:00.000+00:00",
-            "endDate": "2023-01-08T12:30:00.000+00:00",
+            "start_date": "2023-01-08T12:30:00.000+00:00",
+            "end_date": "2023-01-08T12:30:00.000+00:00",
             "max_point": 8.0
           },
           {
             "id": 2,
             "title": "SQL Queries",
             "description": "Learn how to write SQL queries to retrieve and manipulate data",
-            "startDate": "2023-01-10T12:30:00.000+00:00",
-            "endDate": "2023-01-15T12:30:00.000+00:00",
+            "start_date": "2023-01-10T12:30:00.000+00:00",
+            "end_date": "2023-01-15T12:30:00.000+00:00",
             "max_point": 9.0
           },
           {
             "id": 3,
             "title": "Server-side Scripting",
             "description": "Learn how to write server-side scripts using PHP",
-            "startDate": "2023-01-16T12:30:00.000+00:00",
-            "endDate": "2023-01-20T12:30:00.000+00:00",
+            "start_date": "2023-01-16T12:30:00.000+00:00",
+            "end_date": "2023-01-20T12:30:00.000+00:00",
             "max_point": 9.0
           },
           {
             "id": 4,
             "title": "API Development",
             "description": "Learn how to develop RESTful APIs for web applications",
-            "startDate": "2023-01-21T12:30:00.000+00:00",
-            "endDate": "2023-01-23T12:30:00.000+00:00",
+            "start_date": "2023-01-21T12:30:00.000+00:00",
+            "end_date": "2023-01-23T12:30:00.000+00:00",
             "max_point": 10.0
           },
           {
             "id": 5,
             "title": "Security and Authentication",
             "description": "Learn about web application security and authentication techniques",
-            "startDate": "2023-01-24T12:30:00.000+00:00",
-            "endDate": "2023-01-30T12:30:00.000+00:00",
+            "start_date": "2023-01-24T12:30:00.000+00:00",
+            "end_date": "2023-01-30T12:30:00.000+00:00",
             "max_point": 10.0
           }
         ],
@@ -71,40 +72,40 @@ export default createStore({
             "id": 1,
             "title": "Database Fundamentals",
             "description": "Learn the basics of database design and management",
-            "startDate": "2023-01-08T12:30:00.000+00:00",
-            "endDate": "2023-01-08T12:30:00.000+00:00",
+            "start_date": "2023-01-08T12:30:00.000+00:00",
+            "end_date": "2023-01-08T12:30:00.000+00:00",
             "max_point": 8.0
           },
           {
             "id": 2,
             "title": "SQL Queries",
             "description": "Learn how to write SQL queries to retrieve and manipulate data",
-            "startDate": "2023-01-10T12:30:00.000+00:00",
-            "endDate": "2023-01-15T12:30:00.000+00:00",
+            "start_date": "2023-01-10T12:30:00.000+00:00",
+            "end_date": "2023-01-15T12:30:00.000+00:00",
             "max_point": 9.0
           },
           {
             "id": 3,
             "title": "Server-side Scripting",
             "description": "Learn how to write server-side scripts using PHP",
-            "startDate": "2023-01-16T12:30:00.000+00:00",
-            "endDate": "2023-01-20T12:30:00.000+00:00",
+            "start_date": "2023-01-16T12:30:00.000+00:00",
+            "end_date": "2023-01-20T12:30:00.000+00:00",
             "max_point": 9.0
           },
           {
             "id": 4,
             "title": "API Development",
             "description": "Learn how to develop RESTful APIs for web applications",
-            "startDate": "2023-01-21T12:30:00.000+00:00",
-            "endDate": "2023-01-23T12:30:00.000+00:00",
+            "start_date": "2023-01-21T12:30:00.000+00:00",
+            "end_date": "2023-01-23T12:30:00.000+00:00",
             "max_point": 10.0
           },
           {
             "id": 5,
             "title": "Security and Authentication",
             "description": "Learn about web application security and authentication techniques",
-            "startDate": "2023-01-24T12:30:00.000+00:00",
-            "endDate": "2023-01-30T12:30:00.000+00:00",
+            "start_date": "2023-01-24T12:30:00.000+00:00",
+            "end_date": "2023-01-30T12:30:00.000+00:00",
             "max_point": 10.0
           }
         ],
@@ -126,9 +127,6 @@ export default createStore({
     getCourses(state) {
       return state.courses
     },
-    // idExists: state => id =>   //check if map with specific id exists
-    //   state.notes.map(({ id }) => id).includes(id)
-    // ,
   },
   mutations: {
     SET_USER_TOKENS(state, tokens) {

@@ -9,9 +9,15 @@
         <div class="assignment__rate">
           <input
             class="assignment__grade-input"
-            type="text"
+            type="nunber"
             placeholder="Grade"
-            v-model="newGrade"
+            v-model="formData.point"
+          >
+          <input
+            class="assignment__grade-input"
+            type="text"
+            placeholder="comment"
+            v-model="formData.educator_comment"
           >
           <div
             class="assignment__btn"
@@ -21,7 +27,7 @@
       </div>
       <div class="assignment__description">{{ 'ADD_COMMENT'/*answer.task.description*/ }}</div>
       <div class="assignment__details">
-        <div class="assignment__dates">{{ 'MISSING_STARTING_DATE'/*formatDate(currentAssignment.startDate)*/ + ' – ' + 'MISSING_FINISH_DATE'/*formatDate(currentAssignment.endDate)*/ }}</div>
+        <div class="assignment__dates">{{ 'MISSING_STARTING_DATE'/*formatDate(currentAssignment.start_date)*/ + ' – ' + 'MISSING_FINISH_DATE'/*formatDate(currentAssignment.end_date)*/ }}</div>
       </div>
     </div>
   </AssignmentBlock>
@@ -39,7 +45,9 @@
     </div>
     <div class="answer-info__line answer-info__line_document">
       <span class="answer-info__line-title">Report:</span>
-      <a :href="answer.reference">{{ answer.reference }}</a>
+      <a
+        @click.prevent="downloadReport"
+      >{{ answer.reference }}</a>
     </div>
     <div class="answer-info__line answer-info__line_comment">
       <span class="answer-info__line-title">Comment:</span>
@@ -84,6 +92,9 @@ import {
   AnswerInfoBlock,
 } from "@/styles/styledBlocks.js"
 import { mapGetters } from 'vuex'
+import { sendPOST, sendGET, sendDELETE } from "@/requests/requests"
+import endpoints from "@/requests/endpoints"
+import axios from 'axios'
 
 export default {
   name: 'Answer',
@@ -94,7 +105,10 @@ export default {
   inject: ['theme', 'formatDate'],
   data() {
     return ({
-      newGrade: '',
+      formData: {
+        point: 0,
+        educator_comment: ""
+      },
       answer: {
         "id": 1,
         "reference": "lab1_john.pdf",
@@ -183,16 +197,40 @@ export default {
     })
   },
   methods: {
-    saveGrade() {
+    async saveGrade() {
       if (Number(this.newGrade) > this.answer.task.max_point)
         this.$emit("toggle-alert", "The grade is higher, than a maximum one")
       else if (Number(this.newGrade) === this.answer.point)
         this.$emit("toggle-alert", "The grade is the same")
       else
-        console.log("saveGrade triggered, correct input")   
-    }
+        await sendPOST(endpoints.gradeAnswer(this.routeParams.courseID, this.routeParams.studentID, this.routeParams.assignmentID), {"Authorization": `Bearer ${this.getAccessToken}`}, this.formData)
+        .then(res => {
+          if (res) {
+            console.log("saveGrade triggered, correct input")
+          }
+        })
+    },
+    async downloadReport() {
+      axios({
+        url: endpoints.downloadReport(this.routeParams.courseID, this.routeParams.studentID, this.routeParams.assignmentID),
+        method: 'GET',
+        headers: {"Authorization": `Bearer ${this.getAccessToken}`},
+        responseType: 'blob',
+      }).then((response) => {
+        var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+        var fileLink = document.createElement('a');
+      
+        fileLink.href = fileURL;
+        // console.log(fileURL)
+        fileLink.setAttribute('download', this.answer.reference);
+        document.body.appendChild(fileLink);
+      
+        fileLink.click();
+      })
+    },
   },
   computed: {
+    ...mapGetters(['getAccessToken']),
     filterRepoData() {
       let commitsArr = []
       this.repoActivity
@@ -204,8 +242,32 @@ export default {
 
       console.log(commitsArr)
       return 1
-    }
+    },
+    routeParams() {
+      return this.$route.params
+    },
   },
+  async mounted() {
+    await sendGET(
+      endpoints.studentAnswer(this.routeParams.courseID, this.routeParams.studentID, this.routeParams.assignmentID),
+      {"Authorization": `Bearer ${this.getAccessToken}`}
+    )
+    .then(res => {
+      if (res) {
+        this.answer = res
+      }
+    })
+
+    await sendGET(
+      endpoints.commitsActivity(this.routeParams.courseID, this.routeParams.studentID, this.routeParams.assignmentID),
+      {"Authorization": `Bearer ${this.getAccessToken}`}
+    )
+    .then(res => {
+      if (res) {
+        this.repoActivity = res
+      }
+    })
+  }
 }
 
 // 

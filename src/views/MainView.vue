@@ -15,10 +15,10 @@
     >
       <Courses
         v-if="ifRouteNameIs(['courses'])"
+        @toggle-overlay="toggleOverlay"
       />
       <Workflow
         v-if="ifRouteNameIs(['course'])"
-        @toggle-overlay="toggleOverlay"
         @toggle-alert="toggleAlert"
       />
       <Assignment
@@ -45,6 +45,7 @@
       />
     </Container>
     <Overlay
+      v-if="getUserIsStudent"
       :overlay-info="overlayInfo"
       @toggle-overlay="toggleOverlay"
       @toggle-alert="toggleAlert"
@@ -93,10 +94,6 @@ export default {
       },
       overlayInfo: {
         overlayHidden: true,
-        overlayMode: 'add',
-        noteID: '',
-        noteTitle: '',
-        noteContent: '',
       },
     }
   },
@@ -106,11 +103,7 @@ export default {
     toggleSidebar() { //opening/closing the sidebar
       this.sidebarHidden = !this.sidebarHidden
     },
-    toggleOverlay(mode = 'add', noteID = '', noteTitle = '', noteContent = '') {  //opens/closes an overlay with passing note data if mode = edit
-      this.overlayInfo.overlayMode = mode
-      this.overlayInfo.noteID = noteID
-      this.overlayInfo.noteTitle = noteTitle
-      this.overlayInfo.noteContent = noteContent
+    toggleOverlay() {
       this.overlayInfo.overlayHidden = !this.overlayInfo.overlayHidden
     },
     toggleAlert(message = '') { //show/hide alert block

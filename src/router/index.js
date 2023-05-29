@@ -17,9 +17,16 @@ const routes = [
             component: () => import('../views/MainView.vue'),
             children: [
               {
-                path: 'answer_:answerID',
-                name: 'answer',
+                path: 'student_:studentID',
+                name: 'student',
                 component: () => import('../views/MainView.vue'),
+                children: [
+                  {
+                    path: 'answer_:answerID',
+                    name: 'answer',
+                    component: () => import('../views/MainView.vue'),
+                  },
+                ]
               },
               {
                 path: 'edit',
