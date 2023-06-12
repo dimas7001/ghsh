@@ -22,6 +22,9 @@ import {
   AnswerInfoBlock,
 } from "@/styles/styledBlocks.js"
 import { mapGetters } from 'vuex'
+import { sendPOST, sendGET, sendDELETE } from "@/requests/requests"
+import endpoints from "@/requests/endpoints"
+import axios from 'axios'
 
 export default {
   name: 'Profile',
@@ -29,7 +32,7 @@ export default {
     StudentsAnswers, AssignmentBlock, TitleBlock, SubtitleBlock, AnswerInfoBlock, Activity, Commits
   },
   emits: ['toggle-overlay', 'toggle-alert'],
-  inject: ['theme'],
+  inject: ['theme', 'formatDate', 'goTo', 'routeParams'],
   data() {
     return ({
       profileInfo: {}
@@ -39,11 +42,51 @@ export default {
     
   },
   computed: {
-    ...mapGetters(['getUserIsStudent']),
+    ...mapGetters(['getUserIsStudent', 'getAccessToken']),
     currentAssignment() {
       return {}
     },
+    async uploadProfileInfo() {
+      await sendGET(
+        this.getUserIsStudent ?
+        endpoints.profileTeacherOnCourse(this.routeParams.courseID) :
+        endpoints.profileStudentOnCourse(this.routeParams.courseID, this.routeParams.userID),
+        {"Authorization": `Bearer ${this.getAccessToken}`}
+      )
+      .then(res => {
+        if (res) {
+          this.answer = res
+        }
+      })
+    },
+    async uploadAllReposActivity() {
+      await sendGET(
+        endpoints.allReposActivity(this.routeParams.courseID, this.routeParams.userID),
+        {"Authorization": `Bearer ${this.getAccessToken}`}
+      )
+      .then(res => {
+        if (res) {
+          this.answer = res
+        }
+      })
+    },
   },
+  async mounted() {
+    this.uploadProfileInfo()
+
+    if (!this.getUserIsStudent)
+      uploadAllReposActivity()
+
+    // await sendGET(
+    //   endpoints.repoActivity(this.routeParams.courseID, this.routeParams.studentID, this.routeParams.assignmentID),
+    //   {"Authorization": `Bearer ${this.getAccessToken}`}
+    // )
+    // .then(res => {
+    //   if (res) {
+    //     this.repoActivity = res
+    //   }
+    // })
+  }
 }
 
 // { profile for student

@@ -16,6 +16,7 @@
       <Courses
         v-if="ifRouteNameIs(['courses'])"
         @toggle-overlay="toggleOverlay"
+        :courses-update-flag="coursesUpdateFlag"
       />
       <Workflow
         v-if="ifRouteNameIs(['course'])"
@@ -39,16 +40,19 @@
       <Settings
         v-if="ifRouteNameIs(['settings'])"
       />
+      <Profile
+        v-if="ifRouteNameIs(['user_profile', 'lecturer_profile'])"
+      />
       <Answer
         v-if="ifRouteNameIs(['answer']) && !getUserIsStudent"
         @toggle-alert="toggleAlert"
       />
     </Container>
     <Overlay
-      v-if="getUserIsStudent"
-      :overlay-info="overlayInfo"
+      :overlay-hidden="overlayHidden"
       @toggle-overlay="toggleOverlay"
       @toggle-alert="toggleAlert"
+      @update-courses="updateCourses"
     />
     <Alert
       :alert-info="alertInfo"
@@ -71,6 +75,7 @@ import Statistics from '@/components/Statistics.vue'
 import CreateEditCourse from '@/components/create_edit/CreateEditCourse.vue'
 import CreateEditAssignment from '@/components/create_edit/CreateEditAssignment.vue'
 import Settings from '@/components/Settings.vue'
+import Profile from '@/components/Profile.vue'
 import Answer from '@/components/Answer.vue'
 import Overlay from '@/components/Overlay.vue'
 import Alert from '@/components/Alert.vue'
@@ -79,7 +84,7 @@ import { mapGetters, mapMutations } from 'vuex'
 export default {
   name: 'MainView',
   components: {
-    Body, Header, Sidebar, Container, Courses, Workflow, Assignment, StudentsList, Statistics, CreateEditCourse, CreateEditAssignment, Settings, Answer, Overlay, Alert
+    Body, Header, Sidebar, Container, Courses, Workflow, Assignment, StudentsList, Statistics, CreateEditCourse, CreateEditAssignment, Settings, Profile, Answer, Overlay, Alert
   },
   data() {
     return {
@@ -92,9 +97,8 @@ export default {
         alertActive: false,
         alertMessage: '',
       },
-      overlayInfo: {
-        overlayHidden: true,
-      },
+      overlayHidden: true,
+      coursesUpdateFlag: 0,
     }
   },
   inject: ['ifRouteNameIs', 'goTo'],
@@ -104,7 +108,7 @@ export default {
       this.sidebarHidden = !this.sidebarHidden
     },
     toggleOverlay() {
-      this.overlayInfo.overlayHidden = !this.overlayInfo.overlayHidden
+      this.overlayHidden = !this.overlayHidden
     },
     toggleAlert(message = '') { //show/hide alert block
       this.alertInfo.alertMessage = message
@@ -118,6 +122,9 @@ export default {
       this.themeInfo.themeMode = newThemeMode
       this.toggleAlert(`The theme mode was changed to ${newThemeMode}`)
     },
+    updateCourses() {
+      this.coursesUpdateFlag++
+    }
   },
   computed: {
     getCurrentTheme() { //return current theme

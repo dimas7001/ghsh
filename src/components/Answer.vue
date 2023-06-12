@@ -2,39 +2,43 @@
   <AssignmentBlock
     :theme="theme"
   >
-  {{ filterRepoData }}
     <div class="assignment">
-      <div class="assignment__group">
-        <TitleBlock>{{ answer.task.title }}</TitleBlock>
-        <div class="assignment__rate">
-          <input
-            class="assignment__grade-input"
-            type="nunber"
-            placeholder="Grade"
-            v-model="formData.point"
-          >
-          <input
-            class="assignment__grade-input"
-            type="text"
-            placeholder="comment"
-            v-model="formData.educator_comment"
-          >
-          <div
-            class="assignment__btn"
-            @click="saveGrade"
-          >Save The Grade</div>
-        </div>
-      </div>
-      <div class="assignment__description">{{ 'ADD_COMMENT'/*answer.task.description*/ }}</div>
+      <TitleBlock>{{ answer.task.title }}</TitleBlock>
+      <div class="assignment__description">{{ answer.task.description }}</div>
       <div class="assignment__details">
-        <div class="assignment__dates">{{ 'MISSING_STARTING_DATE'/*formatDate(currentAssignment.start_date)*/ + ' – ' + 'MISSING_FINISH_DATE'/*formatDate(currentAssignment.end_date)*/ }}</div>
+        <div class="assignment__dates">{{ formatDate(answer.task.start_date) + ' – ' + formatDate(answer.task.end_date) }}</div>
+      </div>
+      <div class="assignment__rate">
+        <SubtitleBlock>Your Feedback</SubtitleBlock>
+        <div class="assignment__input-group">
+          <input
+          class="assignment__grade-input assignment__grade-input_grade"
+          type="number"
+          placeholder="Grade"
+          min="0"
+          :max="answer.task.max_point"
+          v-model="formData.point"
+        >
+        <input
+          class="assignment__grade-input assignment__grade-input_comment"
+          type="text"
+          placeholder="Leave you comment please"
+          v-model="formData.educator_comment"
+        >
+        </div>
+        <div
+          class="assignment__btn"
+          @click="saveGrade"
+        >Save Feedback</div>
       </div>
     </div>
   </AssignmentBlock>
   <AnswerInfoBlock
     :theme="theme"
   >
-    <SubtitleBlock>{{ 'ADD_NAME_SURNAME_GROUP'/*answer.studentName + ' ' + answer.studentSurname + ' - ' + answer.studentGroup*/ }}</SubtitleBlock>
+    <SubtitleBlock
+      @click="goTo({ name: 'user_profile', params: { userID: `${routeParams.studentID}` } })"
+    >{{ studentInfo.firstname + ' ' + studentInfo.lastname + ' - ' + studentInfo.group }}</SubtitleBlock>
     <div class="answer-info__line answer-info__line_grade">
       <span class="answer-info__line-title">Grade:</span>
       {{ answer.point }}/{{ answer.task.max_point }}
@@ -55,7 +59,7 @@
     </div>
     <div class="answer-info__line answer-info__line_submitted">
       <span class="answer-info__line-title">Submitted:</span>
-      {{ answer.submission_date }}
+      {{ formatDate(answer.submission_date) }}
     </div>
     <div class="answer-info__line answer-info__line_comment">
       <span class="answer-info__line-title">Inspections:</span>
@@ -74,11 +78,11 @@
   </AnswerInfoBlock>
   <!-- for activity pass data with props -->
   <Activity
-    :repoActivity="repoActivity"
+    :repo-activity="repoActivity"
   />
-  <Commits>
-    <SubtitleBlock>Repo Activity Chart</SubtitleBlock>
-  </Commits>
+  <Commits
+    :repo-activity="repoActivity"
+  />
 </template>
 
 <script>
@@ -102,13 +106,14 @@ export default {
     StudentsAnswers, AssignmentBlock, TitleBlock, SubtitleBlock, AnswerInfoBlock, Activity, Commits
   },
   emits: ['toggle-alert'],
-  inject: ['theme', 'formatDate'],
+  inject: ['theme', 'formatDate', 'goTo', 'routeParams'],
   data() {
     return ({
       formData: {
-        point: 0,
+        point: '',
         educator_comment: ""
       },
+      studentInfo: {},
       answer: {
         "id": 1,
         "reference": "lab1_john.pdf",
@@ -136,63 +141,23 @@ export default {
       ],
       repoActivity: [
         {
-          "commits": [
-              {
-                  "author": "UnforgettableDew",
-                  "message": "basic db functionality",
-                  "date": "2023-04-25T08:44:13.000+00:00",
-                  "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/00d6a763e96fb1c5b7f9587673e169946ae4ae87"
-              }
-          ],
-          "branch_name": "develop"
+          date: '01/01/2001',
+          github_commit_url: 'https://github.com/dimas7001/ghsh',
+          branch_names: ['master'],
+          message: "Pacific cod Rasbora lefteye flounder",
         },
         {
-            "commits": [
-                {
-                    "author": "UnforgettableDew",
-                    "message": "code refactored",
-                    "date": "2023-05-21T11:00:44.000+00:00",
-                    "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/202db538c723dcedacf32449dded3fd2bc233684"
-                },
-                {
-                    "author": "UnforgettableDew",
-                    "message": "file upload/download added",
-                    "date": "2023-05-15T16:26:15.000+00:00",
-                    "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/dbbcdfe0102c6c337271e9c4eacde95f67461f5f"
-                },
-                {
-                    "author": "UnforgettableDew",
-                    "message": "updated",
-                    "date": "2023-05-15T08:20:03.000+00:00",
-                    "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/7fd100cb70d374e7d539c94ca976f8cd8e37b54e"
-                },
-                {
-                    "author": "UnforgettableDew",
-                    "message": "github added",
-                    "date": "2023-05-13T16:41:53.000+00:00",
-                    "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/1828f0643a9360f2667bbc51bca290f05c34aa61"
-                },
-                {
-                    "author": "UnforgettableDew",
-                    "message": "education logic",
-                    "date": "2023-05-13T11:15:32.000+00:00",
-                    "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/04a35bef40c852316f720bfcd066712165c1d012"
-                },
-                {
-                    "author": "UnforgettableDew",
-                    "message": "basic auth",
-                    "date": "2023-04-26T13:34:17.000+00:00",
-                    "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/a8e573cffd7c3d78fdb10b196f6f7a4f9dbe9169"
-                },
-                {
-                    "author": "UnforgettableDew",
-                    "message": "basic db functionality",
-                    "date": "2023-04-25T08:44:13.000+00:00",
-                    "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/00d6a763e96fb1c5b7f9587673e169946ae4ae87"
-                }
-            ],
-            "branch_name": "feature-basic-auth"
-        }
+          date: '01/01/2001',
+          github_commit_url: 'https://github.com/dimas7001/ghsh',
+          branch_names: ['master', 'development'],
+          message: "on, wolf-eel bluefish deepwater flath",
+        },
+        {
+          date: '01/01/2001',
+          github_commit_url: 'https://github.com/dimas7001/ghsh',
+          branch_names: ['master', 'development'],
+          message: "rivuline bigmouth buffal",
+        },
       ],
     })
   },
@@ -228,45 +193,224 @@ export default {
         fileLink.click();
       })
     },
+    async uploadStudentAnswer() {
+      await sendGET(
+        endpoints.studentAnswer(this.routeParams.courseID, this.routeParams.studentID, this.routeParams.assignmentID),
+        {"Authorization": `Bearer ${this.getAccessToken}`}
+      )
+      .then(res => {
+        if (res.passed_task) {
+          this.answer = res.passed_task
+          this.studentInfo = res.student
+          this.formData.point = res.passed_task.point
+          this.formData.educator_comment = res.passed_task.educator_comment
+        }
+      })
+    },
+    async uploadRepoActivity() {
+      await sendGET(
+        endpoints.repoActivity(this.routeParams.courseID, this.routeParams.studentID, this.routeParams.assignmentID),
+        {"Authorization": `Bearer ${this.getAccessToken}`}
+      )
+      .then(res => {
+        if (res.repository_url) {
+          let commitsArr = [],
+              positionsToDelete = []
+
+          res.commit_list
+            .forEach(branch => {
+              let branchName = branch.branch_name
+              branch.commits.forEach(commit => {
+                commit['branch_names'] = [branchName]
+                commitsArr.push(commit)
+              })
+            })
+
+          commitsArr.forEach((commit, i) => {
+            let commitLink = commit.github_commit_url
+
+            for (let j = i + 1; j < commitsArr.length; j ++) {
+              if (commitLink === commitsArr[j].github_commit_url) {
+                commitsArr[i].branch_names = commitsArr[i].branch_names.concat(commitsArr[j].branch_names)
+                positionsToDelete.push(j)
+              }
+            }
+          })
+
+          positionsToDelete = [...new Set(positionsToDelete)]
+
+          positionsToDelete.reverse().forEach(pointer => {
+            commitsArr.splice(pointer, 1)
+          })
+
+          this.repoActivity = commitsArr
+        }
+      })
+    },
+    fakeUploadRepoActivity() {
+      let fakeRes = {commit_list:[
+        {
+          "branch_name": "branch-ready",
+          "commits": [
+            {
+              "author": "UnforgettableDew",
+              "message": "add new functionality",
+              "date": "2023-05-24T19:27:56.000+00:00",
+              "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/c7e6d0526c817ffcfd96de68d885e13ba76a7d48"
+            },
+            {
+              "author": "UnforgettableDew",
+              "message": "start/end and submission date added",
+              "date": "2023-05-22T12:49:10.000+00:00",
+              "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/1dcc0bfaf8231759f2821277fdf65c578e2fce49"
+            },
+            {
+              "author": "UnforgettableDew",
+              "message": "start/end and submission date added",
+              "date": "2023-05-21T11:00:44.000+00:00",
+              "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/16e007f7eff585306de0d53afabb10a41b3e0633"
+            },
+            {
+              "author": "UnforgettableDew",
+              "message": "file upload/download added",
+              "date": "2023-05-15T16:26:15.000+00:00",
+              "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/dbbcdfe0102c6c337271e9c4eacde95f67461f5f"
+            },
+            {
+              "author": "UnforgettableDew",
+              "message": "updated",
+              "date": "2023-05-15T08:20:03.000+00:00",
+              "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/7fd100cb70d374e7d539c94ca976f8cd8e37b54e"
+            },
+            {
+              "author": "UnforgettableDew",
+              "message": "github added",
+              "date": "2023-05-13T16:41:53.000+00:00",
+              "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/1828f0643a9360f2667bbc51bca290f05c34aa61"
+            },
+            {
+              "author": "UnforgettableDew",
+              "message": "education logic",
+              "date": "2023-05-13T11:15:32.000+00:00",
+              "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/04a35bef40c852316f720bfcd066712165c1d012"
+            },
+            {
+              "author": "UnforgettableDew",
+              "message": "basic auth",
+              "date": "2023-04-26T13:34:17.000+00:00",
+              "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/a8e573cffd7c3d78fdb10b196f6f7a4f9dbe9169"
+            },
+            {
+              "author": "UnforgettableDew",
+              "message": "basic db functionality",
+              "date": "2023-04-25T08:44:13.000+00:00",
+              "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/00d6a763e96fb1c5b7f9587673e169946ae4ae87"
+            }
+          ]
+        },
+        {
+          "branch_name": "develop",
+          "commits": [
+            {
+              "author": "UnforgettableDew",
+              "message": "basic db functionality",
+              "date": "2023-04-25T08:44:13.000+00:00",
+              "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/00d6a763e96fb1c5b7f9587673e169946ae4ae87"
+            }
+          ]
+        },
+        {
+          "branch_name": "feature-basic-auth",
+          "commits": [
+            {
+              "author": "UnforgettableDew",
+              "message": "code refactored",
+              "date": "2023-05-21T11:00:44.000+00:00",
+              "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/202db538c723dcedacf32449dded3fd2bc233684"
+            },
+            {
+              "author": "UnforgettableDew",
+              "message": "file upload/download added",
+              "date": "2023-05-15T16:26:15.000+00:00",
+              "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/dbbcdfe0102c6c337271e9c4eacde95f67461f5f"
+            },
+            {
+              "author": "UnforgettableDew",
+              "message": "updated",
+              "date": "2023-05-15T08:20:03.000+00:00",
+              "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/7fd100cb70d374e7d539c94ca976f8cd8e37b54e"
+            },
+            {
+              "author": "UnforgettableDew",
+              "message": "github added",
+              "date": "2023-05-13T16:41:53.000+00:00",
+              "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/1828f0643a9360f2667bbc51bca290f05c34aa61"
+            },
+            {
+              "author": "UnforgettableDew",
+              "message": "education logic",
+              "date": "2023-05-13T11:15:32.000+00:00",
+              "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/04a35bef40c852316f720bfcd066712165c1d012"
+            },
+            {
+              "author": "UnforgettableDew",
+              "message": "basic auth",
+              "date": "2023-04-26T13:34:17.000+00:00",
+              "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/a8e573cffd7c3d78fdb10b196f6f7a4f9dbe9169"
+            },
+            {
+              "author": "UnforgettableDew",
+              "message": "basic db functionality",
+              "date": "2023-04-25T08:44:13.000+00:00",
+              "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/00d6a763e96fb1c5b7f9587673e169946ae4ae87"
+            }
+          ]
+        }
+      ]}
+
+      let commitsArr = [],
+          positionsToDelete = []
+
+      fakeRes.commit_list
+        .forEach(branch => {
+          let branchName = branch.branch_name
+          branch.commits.forEach(commit => {
+            commit['branch_names'] = [branchName]
+            commitsArr.push(commit)
+          })
+        })
+
+      commitsArr.forEach((commit, i) => {
+        let commitLink = commit.github_commit_url
+
+        for (let j = i + 1; j < commitsArr.length; j ++) {
+          if (commitLink === commitsArr[j].github_commit_url) {
+            commitsArr[i].branch_names = commitsArr[i].branch_names.concat(commitsArr[j].branch_names)
+            positionsToDelete.push(j)
+          }
+        }
+      })
+
+      positionsToDelete = [...new Set(positionsToDelete)]
+
+      positionsToDelete.reverse().forEach(pointer => {
+        commitsArr.splice(pointer, 1)
+      })
+
+      commitsArr.sort((a, b) => {
+        return a.date < b.date ? 1 : a.date > b.date ? -1 : 0
+      })
+
+      this.repoActivity = commitsArr
+    },
   },
   computed: {
     ...mapGetters(['getAccessToken']),
-    filterRepoData() {
-      let commitsArr = []
-      this.repoActivity
-        .forEach(branch => commitsArr.push(...branch.commits))
-
-      for (let i = 0; i < commitsArr.length; i++)
-        console.log(commitsArr.some(commit => commit === commitsArr[i]))
-
-
-      console.log(commitsArr)
-      return 1
-    },
-    routeParams() {
-      return this.$route.params
-    },
   },
   async mounted() {
-    await sendGET(
-      endpoints.studentAnswer(this.routeParams.courseID, this.routeParams.studentID, this.routeParams.assignmentID),
-      {"Authorization": `Bearer ${this.getAccessToken}`}
-    )
-    .then(res => {
-      if (res) {
-        this.answer = res
-      }
-    })
-
-    await sendGET(
-      endpoints.commitsActivity(this.routeParams.courseID, this.routeParams.studentID, this.routeParams.assignmentID),
-      {"Authorization": `Bearer ${this.getAccessToken}`}
-    )
-    .then(res => {
-      if (res) {
-        this.repoActivity = res
-      }
-    })
+    this.uploadStudentAnswer()
+    // this.uploadRepoActivity()
+    this.fakeUploadRepoActivity()
   }
 }
 
@@ -283,66 +427,7 @@ export default {
 //     }
 // ]
 
-// [
-//     {
-//         "commits": [
-//             {
-//                 "author": "UnforgettableDew",
-//                 "message": "basic db functionality",
-//                 "date": "2023-04-25T08:44:13.000+00:00",
-//                 "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/00d6a763e96fb1c5b7f9587673e169946ae4ae87"
-//             }
-//         ],
-//         "branch_name": "develop"
-//     },
-//     {
-//         "commits": [
-//             {
-//                 "author": "UnforgettableDew",
-//                 "message": "code refactored",
-//                 "date": "2023-05-21T11:00:44.000+00:00",
-//                 "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/202db538c723dcedacf32449dded3fd2bc233684"
-//             },
-//             {
-//                 "author": "UnforgettableDew",
-//                 "message": "file upload/download added",
-//                 "date": "2023-05-15T16:26:15.000+00:00",
-//                 "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/dbbcdfe0102c6c337271e9c4eacde95f67461f5f"
-//             },
-//             {
-//                 "author": "UnforgettableDew",
-//                 "message": "updated",
-//                 "date": "2023-05-15T08:20:03.000+00:00",
-//                 "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/7fd100cb70d374e7d539c94ca976f8cd8e37b54e"
-//             },
-//             {
-//                 "author": "UnforgettableDew",
-//                 "message": "github added",
-//                 "date": "2023-05-13T16:41:53.000+00:00",
-//                 "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/1828f0643a9360f2667bbc51bca290f05c34aa61"
-//             },
-//             {
-//                 "author": "UnforgettableDew",
-//                 "message": "education logic",
-//                 "date": "2023-05-13T11:15:32.000+00:00",
-//                 "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/04a35bef40c852316f720bfcd066712165c1d012"
-//             },
-//             {
-//                 "author": "UnforgettableDew",
-//                 "message": "basic auth",
-//                 "date": "2023-04-26T13:34:17.000+00:00",
-//                 "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/a8e573cffd7c3d78fdb10b196f6f7a4f9dbe9169"
-//             },
-//             {
-//                 "author": "UnforgettableDew",
-//                 "message": "basic db functionality",
-//                 "date": "2023-04-25T08:44:13.000+00:00",
-//                 "github_commit_url": "https://github.com/UnforgettableDew/SecurityPart/commit/00d6a763e96fb1c5b7f9587673e169946ae4ae87"
-//             }
-//         ],
-//         "branch_name": "feature-basic-auth"
-//     }
-// ]
+
 
 
 

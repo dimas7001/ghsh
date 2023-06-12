@@ -4,29 +4,52 @@
   >
     <div class="assignment">
       <div class="assignment__group">
-        <TitleBlock>{{ currentAssignment.title }}</TitleBlock>
+        <TitleBlock>{{ assignment.title }}</TitleBlock>
+        <div
+          class="assignment__btn"
+          v-if="!getUserIsStudent"
+          @click.stop="goTo({ name: 'edit_assignment', params: { assignmentID: `${assignment.id}` } })"
+        >Edit</div>
+      </div>
+      <div class="assignment__materials">
         <div
           @click="downloadFile"
-        >||downloadFile||</div>
-        <div class="assignment__btn">Edit</div>
+          class="assignment__attachment"
+        >
+          <img
+            :src="require(`@/assets/img/icons/file/file_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
+            alt="download_attachment"
+          >
+        </div>
+        <div class="assignment__description">{{ assignment.description }}</div>
       </div>
-      <div class="assignment__description">{{ currentAssignment.description }}</div>
       <div class="assignment__details">
         <div class="assignment__grade">
           <span
             v-if="getUserIsStudent"
-          >{{ currentGrade + '/' + currentAssignment.max_point }} points</span>
+          >{{ getCurrentGrade + '/' + assignment.max_point }} points</span>
           <span
             v-else
-          >max. {{ currentAssignment.max_point }} points</span>
+          >max. {{ assignment.max_point }} points</span>
         </div>
-        <div class="assignment__dates">{{ formatDate(currentAssignment.start_date) + ' – ' + formatDate(currentAssignment.end_date) }}</div>
+        <div class="assignment__dates">{{ formatDate(assignment.start_date) + ' – ' + formatDate(assignment.end_date) }}</div>
+      </div>
+      <div class="assignment__btn-group">
+        <div
+          class="assignment__btn"
+          @click="createAssignmentRepo"
+        >Create Assignment Repo</div>
+        <div
+          class="assignment__btn"
+          @click="importAssignmentRepo"
+        >Import Assignment Repo</div>
       </div>
     </div>
   </AssignmentBlock>
   <AssignmentAnswer
     v-if="getUserIsStudent"
     :update-current-grade="updateCurrentGrade"
+    :existing-answer-update-flag="existingAnswerUpdateFlag"
   />
   <StudentsAnswers
     v-else
@@ -51,22 +74,17 @@ export default {
     StudentsAnswers, AssignmentAnswer, AssignmentBlock, TitleBlock
   },
   emits: ['toggle-overlay', 'toggle-alert'],
-  inject: ['theme', 'formatDate'],
+  inject: ['theme', 'themeInfo', 'formatDate', 'routeParams', 'goTo'],
   data() {
-    return ({
+    return {
       currentGrade: '-',
-      assignment: {
-        "id": 1,
-        "title": "Database Fundamentals",
-        description: "Mummichog; orange roughy mora deep sea anglerfish bluntnose knifefish Chinook salmon titan triggerfish, brook lamprey?",
-        "start_date": "2023-01-08T12:30:00.000+00:00",
-        "end_date": "2023-01-08T12:30:00.000+00:00",
-        "max_point": 8.0
-      },
-    })
+      assignment: {},
+      existingAnswerUpdateFlag: 0,
+    }
   },
   methods: {
     updateCurrentGrade(grade) {
+      console.log('triggered 2', grade)
       this.currentGrade = grade
     },
     async downloadFile() {
@@ -87,14 +105,45 @@ export default {
         fileLink.click();
       })
     },
+    async createAssignmentRepo() {
+      await sendPOST(
+        this.getUserIsStudent ?
+        endpoints.createAssignmentRepoStudent(this.routeParams.courseID, this.routeParams.assignmentID) :
+        endpoints.createAssignmentRepoTeacher(this.routeParams.courseID, this.routeParams.assignmentID),
+        {"Authorization": `Bearer ${this.getAccessToken}`},
+        {
+          "name": this.assignment.title + '1',
+          "description": this.assignment.description
+        }
+      )
+      .then(res => {
+        if (res.html_url) {
+          console.log(res)
+          this.updateExistingAnswer()
+        }
+      })
+    },
+    async importAssignmentRepo() {
+      await sendPUT(
+        endpoints.importAssignmentRepoStudent(this.routeParams.courseID, this.routeParams.assignmentID),
+        {"Authorization": `Bearer ${this.getAccessToken}`},
+        {}
+      )
+      .then(res => {
+        if (res.successful_action) {
+          console.log(res)
+        }
+      })
+    },
+    updateExistingAnswer() {
+      this.existingAnswerUpdateFlag++
+      console.log(this.existingAnswerUpdateFlag)
+    }
   },
   computed: {
     ...mapGetters(['getUserIsStudent', 'getAccessToken']),
-    currentAssignment() {
-      return this.assignment
-    },
-    routeParams() {
-      return this.$route.params
+    getCurrentGrade() {
+      return this.currentGrade
     }
   },
   async mounted() {

@@ -1,51 +1,55 @@
 <template>
-  <form>
-    <br><br>
-    <input
-      class=""
-      placeholder="Course name"
-      type="text"
-      v-model="newCourse.title"
-    >
-    <br>
-    <input
-      class=""
-      placeholder="Course descr"
-      type="text"
-      v-model="newCourse.description"
-    >
-    <br>
-    <input
-      class=""
-      placeholder="Course name"
-      type="date"
-      v-model="newCourse.start_date"
-    >
-    <br>
-    <input
-      class=""
-      placeholder="Course name"
-      type="date"
-      v-model="newCourse.end_date"
-    >
-    <br><br>
-    <div
-      class="btn"
-      @click="submit"
-    >
-      ||Create||
-    </div>
-    <div
-      class="btn"
-      @click="submitUpdate"
-    >
-      ||Update||
-    </div>
-  </form>
+  <CreateEditBlock
+    :theme="theme"
+  >
+    <TitleBlock
+      v-if="ifRouteNameIs(['create_course'])"
+    >Create Course</TitleBlock>
+    <TitleBlock
+      v-else
+    >Update Course</TitleBlock>
+    <form>
+      <input
+        placeholder="Course name"
+        type="text"
+        v-model="newCourse.title"
+      >
+      <textarea
+        class="create-edit__input_descr"
+        placeholder="Course description"
+        rows="5"
+        v-model="newCourse.description"
+      ></textarea>
+      <div class="create-edit__input-group">
+        <input
+          type="date"
+          v-model="newCourse.start_date"
+        >
+        <input
+          type="date"
+          v-model="newCourse.end_date"
+        >
+      </div>
+      <div class="create-edit__input-group create-edit__input-group_hints">
+        <span>Start Date</span>
+        <span>End Date</span>
+      </div>
+      <div
+        class="create-edit__btn"
+        v-if="ifRouteNameIs(['create_course'])"
+        @click="submit"
+      >Create Course</div>
+      <div
+        class="create-edit__btn"
+        v-else
+        @click="submitUpdate"
+      >Update Course</div>
+    </form>
+  </CreateEditBlock>
 </template>
 
 <script>
-import { CoursesBlock, TitleBlock, NewItemBlock, Controls } from "@/styles/styledBlocks.js"
+import { CoursesBlock, TitleBlock, NewItemBlock, Controls, CreateEditBlock } from "@/styles/styledBlocks.js"
 import { mapGetters, mapMutations } from 'vuex'
 import { sendPOST, sendGET, sendPUT } from "@/requests/requests"
 import endpoints from "@/requests/endpoints"
@@ -53,7 +57,7 @@ import endpoints from "@/requests/endpoints"
 export default {
   name: 'CreateEditCourse',
   components: {
-    CoursesBlock, TitleBlock, NewItemBlock, Controls
+    CoursesBlock, TitleBlock, NewItemBlock, Controls, CreateEditBlock
   },
   props: {
   },
@@ -67,7 +71,7 @@ export default {
         start_date: '',
         end_date: ''
       },
-      courses: [
+      course: [
         {
           id: 1,
           "title": "Back-end",
@@ -110,10 +114,7 @@ export default {
   computed: {
     ...mapGetters(['getAccessToken', 'getUserIsStudent']),
     currentCourses() {
-      return this.courses
-    },
-    currentCourses() {
-      return this.courses
+      return this.course
     },
     getUpdatedCourse() {
       return {
@@ -134,7 +135,7 @@ export default {
         if (res) {
           // res.start_date = this.formatDate(res.start_date)
           // res.end_date = this.formatDate(res.end_date)
-          this.newCourse = this.courses = res
+          this.newCourse = this.course = res
         }
       })
   }

@@ -1,16 +1,52 @@
 <template>
-  <div
-    v-for="student in students"
-    :key="student.id"
+  <StudentsListBlock
+    :theme="theme"
   >
-    {{ student }}
-  </div>
+    <TitleBlock>Students On Course</TitleBlock>
+    <div class="students__wrapper">
+      <div class="student student_head">
+        <div class="student__name">Name</div>
+        <div class="student__group">Group</div>
+        <div class="student__tasks">Passed Tasks</div>
+        <div class="student__average">Average Point</div>
+      </div>
+      <div
+        class="student"
+        v-for="student in students"
+        :key="student.id"
+        @click="goTo({ name: 'user_profile', params: { courseID: `${routeParams.courseID}`, userID: `${student.id}` } })"
+      >
+        <div
+          class="student__name"
+        >
+          {{ student.firstname + ' ' + student.lastname }}
+        </div>
+        <div
+          class="student__group"
+        >
+          {{ student.group }}
+        </div>
+        <div
+          class="student__tasks"
+        >
+          {{ student.passed_tasks.length + '/' + tasksAmount }}
+        </div>
+        <div
+          class="student__average"
+        >
+          {{ calculateAverage(student.passed_tasks) }}%
+        </div>
+      </div>
+    </div>
+  </StudentsListBlock>
 </template>
 
 <script>
 import {
+  TitleBlock,
   SubtitleBlock,
-  CommitsBlock
+  CommitsBlock,
+  StudentsListBlock
 } from "@/styles/styledBlocks.js"
 import { mapGetters, mapMutations } from 'vuex'
 import axios from 'axios'
@@ -20,46 +56,77 @@ import endpoints from "@/requests/endpoints"
 export default {
   name: 'StudentsList',
   components: {
-    SubtitleBlock, CommitsBlock
+    TitleBlock, SubtitleBlock, CommitsBlock, StudentsListBlock
   },
-  inject: ['theme', 'goTo'],
+  inject: ['theme', 'goTo', 'routeParams'],
   data() {
     return ({
+      tasksAmount: 0,
       students: [
-        {
-          id: '1',
-          name: 'name',
-          surname: 'surname'
-        },
-        {
-          id: '2',
-          name: 'name1',
-          surname: 'surname1'
-        },
-        {
-          id: '3',
-          name: 'name2',
-          surname: 'surname2'
-        },
+        // {
+        //   id: '1',
+        //   name: 'name',
+        //   surname: 'surname'
+        // },
+        // {
+        //   id: '2',
+        //   name: 'name1',
+        //   surname: 'surname1'
+        // },
+        // {
+        //   id: '3',
+        //   name: 'name2',
+        //   surname: 'surname2'
+        // },
       ]
     })
   },
-  computed: {
-    ...mapGetters(['getAccessToken']),
-    routeParams() {
-      return this.$route.params
+  methods: {
+    calculateAverage(passed_tasks) {
+      let shareArr = [],
+          sharesSum = 0
+
+      passed_tasks.forEach(item => {
+        shareArr.push(item.point / item.task.max_point)
+      })
+
+      shareArr.forEach(share => {
+        sharesSum += share
+      })
+
+      return Math.round(sharesSum / shareArr.length * 100)
+    },
+    async uploadStudentsList() {
+      await sendGET(
+        endpoints.courseStudents(this.routeParams.courseID),
+        {"Authorization": `Bearer ${this.getAccessToken}`}
+      )
+      .then(res => {
+        if (res) {
+          this.students = res
+        }
+      })
+    },
+    async uploadCourse() {
+      await sendGET(
+        this.getUserIsStudent ?
+        endpoints.courseByIDStudent(this.routeParams.courseID) :
+        endpoints.courseByIDTeacher(this.routeParams.courseID),
+        {"Authorization": `Bearer ${this.getAccessToken}`}
+      )
+      .then(res => {
+        if (res.id) {
+          this.tasksAmount = res.tasks.length
+        }
+      })
     },
   },
+  computed: {
+    ...mapGetters(['getAccessToken']),
+  },
   async mounted() {
-    await sendGET(
-      endpoints.courseStudents(this.routeParams.courseID),
-      {"Authorization": `Bearer ${this.getAccessToken}`}
-    )
-    .then(res => {
-      if (res) {
-        this.students = res
-      }
-    })
+    this.uploadCourse()
+    this.uploadStudentsList()
   }
 }
 

@@ -44,7 +44,7 @@ export default {
   components: {
     SubtitleBlock, StudentsAnswersBlock
   },
-  inject: ['theme', 'goTo'],
+  inject: ['theme', 'goTo', 'routeParams'],
   data() {
     return ({
       studentAnswers: [
@@ -107,20 +107,22 @@ export default {
   },
   computed: {
     ...mapGetters(['getUserIsStudent', 'getAccessToken']),
-    routeParams() {
-      return this.$route.params
+  },
+  methods: {
+    async uploadAssignmentAnswers() {
+      await sendGET(
+        endpoints.assignmentAnswers(this.routeParams.courseID, this.routeParams.assignmentID),
+        {"Authorization": `Bearer ${this.getAccessToken}`}
+      )
+      .then(res => {
+        if (res) {
+          this.studentAnswers = res
+        }
+      })
     },
   },
   async mounted() {
-    await sendGET(
-      endpoints.assignmentAnswers(this.routeParams.courseID, this.routeParams.assignmentID),
-      {"Authorization": `Bearer ${this.getAccessToken}`}
-    )
-    .then(res => {
-      if (res) {
-        this.studentAnswers = res
-      }
-    })
+    this.uploadAssignmentAnswers()
   },
 }
 </script>

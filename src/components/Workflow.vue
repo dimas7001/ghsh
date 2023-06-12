@@ -2,16 +2,25 @@
   <WorkflowBlock
     :theme="theme"
   >
-    <TitleBlock>Course Title</TitleBlock>
+    <TitleBlock
+      :class="{'wf__title_teacher': !getUserIsStudent}"
+    >{{ course.title }}</TitleBlock>
     <div>{{ course.description }}</div>
-    <!-- <div class="wf-item__group">
+    <div class="wf__details">
       <div
-        @click="downloadFile"
-      >click to save</div>
-    </div> -->
+        class="wf__teacher"
+        v-if="getUserIsStudent"
+        @click="goTo({ name: 'lecturer_profile'})"
+      >{{ course.educator }}</div>
+      <div
+        v-if="anyAssignmentExist"
+        class="wf__dates"
+      >{{ formatDate(course.start_date) + ' – ' + formatDate(course.end_date) }}</div>
+    </div>
     <NewItemBlock
-      :theme="theme"
       class="courses__create"
+      v-if="!getUserIsStudent"
+      :theme="theme"
       @click="goTo({ name: 'create_assignment'})"
     />
     <div
@@ -26,6 +35,7 @@
       >
         <div
           class="wf-item"
+          :class="{'wf-item_teacher': !getUserIsStudent}"
           :id="assignment.id"
           v-cloak
         >
@@ -50,6 +60,7 @@
           <Controls
             class="controls"
             :theme="theme"
+            v-if="!getUserIsStudent"
           >
             <div
               class="controls__edit"
@@ -74,9 +85,11 @@
       </div>
     </div>
     <div class="wf-item__no-items">
-      This course is empty :(
+      This course is empty yet :(
       <br>
-      Add some articles with +
+      <span
+        v-if="!getUserIsStudent"
+      >Add some articles with +</span>
     </div>
   </WorkflowBlock>
 </template>
@@ -97,59 +110,10 @@ export default {
     
   },
   emits: ['toggle-overlay', 'toggle-alert'],
-  inject: ['theme', 'themeInfo', 'goTo', 'formatDate'],
+  inject: ['theme', 'themeInfo', 'goTo', 'formatDate', 'routeParams'],
   data() {
     return ({
-      course: {
-        id: 1,
-        "title": "Back-end",
-        "description": "Course for Back-end developers",
-        "educator": "Kostyantin Zhereb",
-        "tasks": [
-          {
-            "id": 1,
-            "title": "Database Fundamentals",
-            description: "Learn the basics of database design and management",
-            "start_date": "2023-01-08T12:30:00.000+00:00",
-            "end_date": "2023-01-08T12:30:00.000+00:00",
-            "max_point": 8.0
-          },
-          {
-            "id": 2,
-            "title": "SQL Queries",
-            "description": "Learn how to write SQL queries to retrieve and manipulate data",
-            "start_date": "2023-01-10T12:30:00.000+00:00",
-            "end_date": "2023-01-15T12:30:00.000+00:00",
-            "max_point": 9.0
-          },
-          {
-            "id": 3,
-            "title": "Server-side Scripting",
-            "description": "Learn how to write server-side scripts using PHP",
-            "start_date": "2023-01-16T12:30:00.000+00:00",
-            "end_date": "2023-01-20T12:30:00.000+00:00",
-            "max_point": 9.0
-          },
-          {
-            "id": 4,
-            "title": "API Development",
-            "description": "Learn how to develop RESTful APIs for web applications",
-            "start_date": "2023-01-21T12:30:00.000+00:00",
-            "end_date": "2023-01-23T12:30:00.000+00:00",
-            "max_point": 10.0
-          },
-          {
-            "id": 5,
-            "title": "Security and Authentication",
-            "description": "Learn about web application security and authentication techniques",
-            "start_date": "2023-01-24T12:30:00.000+00:00",
-            "end_date": "2023-01-30T12:30:00.000+00:00",
-            "max_point": 10.0
-          }
-        ],
-        "start_date": "2023-01-08T12:30:00.000+00:00",
-        "end_date": "2023-03-08T12:30:00.000+00:00"
-      }
+      course: {}
     })
   },
   methods: {
@@ -165,68 +129,31 @@ export default {
         }
       })
     },
-    async downloadFile() {
-      axios({
-        url: 'http://25.59.188.46:8080/api/v1/student/courses/1/task/1/download',
-        method: 'GET',
-        headers: {"Authorization": `Bearer ${this.getAccessToken}`},
-        responseType: 'blob',
-      }).then((response) => {
-        var fileURL = window.URL.createObjectURL(new Blob([response.data]));
-        var fileLink = document.createElement('a');
-      
-        fileLink.href = fileURL;
-        fileLink.setAttribute('download', 'file.docx');
-        document.body.appendChild(fileLink);
-      
-        fileLink.click();
+    async uploadCourse() {
+      await sendGET(
+        this.getUserIsStudent ?
+        endpoints.courseByIDStudent(this.routeParams.courseID) :
+        endpoints.courseByIDTeacher(this.routeParams.courseID),
+        {"Authorization": `Bearer ${this.getAccessToken}`}
+      )
+      .then(res => {
+        if (res) {
+          this.course = res
+        }
       })
-    },
-    addArticle() {
-      console.log('addArticle triggered')
     },
   },
   computed: {
-    ...mapGetters(['getAccessToken']),
+    ...mapGetters(['getAccessToken', 'getUserIsStudent']),
     anyAssignmentExist() {
       return this.currentAssignments ? true : false
     },
     currentAssignments() {
       return this.course.tasks
     },
-    routeParams() {
-      return this.$route.params
-    },
-  },
-  watch: {
-    $props: {
-      handler() { //when notes type changes discard search results if search was active
-        if (this.searchValue) {
-          this.notesWasHidden = false
-          this.searchValue = ''
-        }
-      },
-      deep: true,
-    },
-    searchValue() {
-      if (this.searchValue.length > 2)  //if searchValue length > 2 start search
-        this.filterNotes()
-      else if (this.notesWasHidden) //if searchValue length < 2 show all hidden notes if exist
-        this.showHiddenNotes()
-    },
   },
   async mounted() {
-    await sendGET(
-      this.getUserIsStudent ?
-      endpoints.courseByIDStudent(this.$route.params.courseID) :
-      endpoints.courseByIDTeacher(this.$route.params.courseID),
-      {"Authorization": `Bearer ${this.getAccessToken}`}
-    )
-    .then(res => {
-      if (res) {
-        this.course = res
-      }
-    })
-  }
+    this.uploadCourse()
+  },
 }
 </script>

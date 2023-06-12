@@ -3,7 +3,9 @@
     :theme="theme"
   >
     <div class="assignment-answer">
-      <SubtitleBlock>Your Answer</SubtitleBlock>
+      <SubtitleBlock
+        @click="runEmit"
+      >Your Answer</SubtitleBlock>
       <div
         class="assignment-answer__form"
         v-if="!existingAnswerEmpty"
@@ -44,7 +46,7 @@
             <span>Report File (.pdf )</span>
             <div class="assignment-answer__subblock">
               <img
-                :src="require(`@/assets/img/icons/file/file_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
+                :src="require(`@/assets/img/icons/file_add/file_add_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
                 alt="add_file"
               >
               <span>{{ assignmentFile.name }}</span>
@@ -120,8 +122,11 @@ export default {
   components: {
     AssignmentAnswerBlock, SubtitleBlock, Controls
   },
+  props: {
+    existingAnswerUpdateFlag: Number
+  },
   emits: ['toggle-alert', 'update-current-grade'],
-  inject: ['theme', 'themeInfo', 'goTo'],
+  inject: ['theme', 'themeInfo', 'goTo', 'routeParams'],
   data() {
     return ({
       assignmentFile: '',
@@ -160,6 +165,7 @@ export default {
         }
       })
       this.submitFile()
+      this.uploadExistingAswer()
     },
     async submitFile() {
       const formData = new FormData();
@@ -186,8 +192,30 @@ export default {
       .then(res => {
         if (res.successful_action) {
           console.log(res)
+          this.uploadExistingAswer()
         }
       })
+    },
+    async uploadExistingAswer() {
+      await sendGET(
+        endpoints.submittedAnswer(this.routeParams.courseID, this.routeParams.assignmentID),
+        {"Authorization": `Bearer ${this.getAccessToken}`}
+      )
+      .then(res => {
+        if (res.id) {
+          this.existingAnswer = res
+          if (!this.existingAnswer.submission_date)
+            this.assignmentFormData.github_reference = res.github_reference
+          //this.$emit('update-current-grade', '00')
+          console.log('triggered 1')
+        } else {
+          this.existingAnswer = {}
+        }
+      })
+    },
+    runEmit() {
+      console.log('triggered 11')
+      this.$emit('update-current-grade', '00')
     },
   },
   computed: {
@@ -196,30 +224,21 @@ export default {
       return this.assignmentFormData.assignmentLink
     },
     existingAnswerEmpty() {
-      return Object.keys(this.existingAnswer).length ? true : false
-    },
-    routeParams() {
-      return this.$route.params
+      return this.existingAnswer.submission_date ? true : false
     },
 
   },
   async mounted() {
-    await sendGET(
-      endpoints.submittedAnswer(this.routeParams.courseID, this.routeParams.assignmentID),
-      {"Authorization": `Bearer ${this.getAccessToken}`}
-    )
-    .then(res => {
-      if (res.id) {
-        this.existingAnswer = res
-        // this.$emit("update-current-grade", res.point)
-      }
-    })
-  }
+    this.uploadExistingAswer()
+  },
+  watch: {
+    existingAnswerUpdateFlag: {
+      deep: true,
+      handler() {
+        this.uploadExistingAswer()
+        console.log('props triggered')
+      },
+    },
+  },
 }
-
-// { form data
-//     "github_reference": "https://github.com/amigoscode/microservices",
-//     "student_comment": "sexik nash lubimyi"
-// }
-
 </script>

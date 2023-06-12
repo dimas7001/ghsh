@@ -1,11 +1,46 @@
 <template>
-    {{ info }}
+  <StatisticsBlock
+    :theme="theme"
+  >
+    <TitleBlock>Course Statistics</TitleBlock>
+    <div class="statistics__wrapper">
+      <div class="statistics__value statistics__value_main">
+        <div class="statistics__title">Progress</div>
+        <div class="statistics__percentage statistics__percentage_main">{{ courseProgress }}%</div>
+        <div class="statistics__hint">of course accomplished</div>
+        <div class="statistics__share statistics__share_main">
+          <span>{{ tasksPassed }}</span>
+          <span>/</span>
+          <span>{{ totalTasksCount }}</span>
+        </div>
+        <div class="statistics__hint">tasks submitted</div>
+      </div>
+
+      <div
+        class="statistics__value"
+        v-for="passedTask in passedTasksInfo"
+        :key="passedTask.task.id"
+      >
+        <div class="statistics__title">{{ trimHint(passedTask.task.title) }}</div>
+        <div class="statistics__percentage">{{ taskAverage(passedTask) }}%</div>
+        <div class="statistics__hint">average grade in %</div>
+        <div class="statistics__share">
+          <span>{{ passedTask.point }}</span>
+          <span>/</span>
+          <span>{{passedTask.task.max_point }}</span>
+        </div>
+        <div class="statistics__hint">average grade in share</div>
+      </div>
+    </div>
+  </StatisticsBlock>
 </template>
 
 <script>
 import {
+  TitleBlock,
   SubtitleBlock,
-  CommitsBlock
+  CommitsBlock,
+  StatisticsBlock
 } from "@/styles/styledBlocks.js"
 import { mapGetters, mapMutations } from 'vuex'
 import axios from 'axios'
@@ -15,46 +50,69 @@ import endpoints from "@/requests/endpoints"
 export default {
   name: 'StudentsList',
   components: {
-    SubtitleBlock, CommitsBlock
+    TitleBlock, SubtitleBlock, CommitsBlock, StatisticsBlock
   },
-  inject: ['theme', 'goTo'],
+  inject: ['theme', 'goTo', 'routeParams'],
   data() {
     return ({
-      info: [
-        {
-          id: '1',
-          name: 'name',
-          surname: 'surname'
-        },
-        {
-          id: '2',
-          name: 'name1',
-          surname: 'surname1'
-        },
-        {
-          id: '3',
-          name: 'name2',
-          surname: 'surname2'
-        },
+      totalTasksCount: 0,
+      passedTasksInfo: [
+        // {
+        //   id: '1',
+        //   name: 'name',
+        //   surname: 'surname'
+        // },
+        // {
+        //   id: '2',
+        //   name: 'name1',
+        //   surname: 'surname1'
+        // },
+        // {
+        //   id: '3',
+        //   name: 'name2',
+        //   surname: 'surname2'
+        // },
       ]
     })
   },
+  methods: {
+    async uploadStatistics() {
+      await sendGET(
+        endpoints.courseStatistics(this.routeParams.courseID),
+        {"Authorization": `Bearer ${this.getAccessToken}`}
+      )
+      .then(res => {
+        if (res.total_tasks_count) {
+          this.passedTasksInfo = res.passed_tasks
+          this.totalTasksCount = res.total_tasks_count
+        }
+      })
+    },
+    taskAverage(passedTask) {
+      return Math.round(passedTask.point / passedTask.task.max_point * 100)
+    },
+    trimHint(hint) {
+      const trimRange = 15
+      return hint.length > trimRange ? hint.slice(0, trimRange) + '…' : hint
+    },
+  },
   computed: {
     ...mapGetters(['getAccessToken']),
-    routeParams() {
-      return this.$route.params
+    courseProgress() {
+      return Math.round(this.tasksPassed / this.totalTasksCount * 100)
+    },
+    tasksPassed() {
+      let tasksTotal = 0
+
+      this.passedTasksInfo.forEach(task => {
+        tasksTotal += task.students_count
+      })
+
+      return tasksTotal
     },
   },
   async mounted() {
-    await sendGET(
-      endpoints.courseStatistics(this.routeParams.courseID),
-      {"Authorization": `Bearer ${this.getAccessToken}`}
-    )
-    .then(res => {
-      if (res) {
-        this.info = res
-      }
-    })
+    this.uploadStatistics()
   }
 }
 // {

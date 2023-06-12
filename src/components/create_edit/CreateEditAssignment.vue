@@ -1,98 +1,108 @@
 <template>
-  <form>
-    <br><br>
-    <input
-      class=""
-      placeholder="Assignment name"
-      type="text"
-      v-model="newAssignment.title"
-    >
-    <br>
-    <input
-      class=""
-      placeholder="Assignment description"
-      type="text"
-      v-model="newAssignment.description"
-    >
-    <br>
-    <input
-      class=""
-      placeholder="Assignment max. grade"
-      type="number"
-      v-model="newAssignment.max_point"
-    >
-    <br>
-    <input
-      class=""
-      type="date"
-      v-model="newAssignment.start_date"
-    >
-    <br>
-    <input
-      class=""
-      type="date"
-      v-model="newAssignment.end_date"
-    >
-    <br><br>
-    <div
-      class="btn"
-      @click="submit"
-    >
-      ||Create||
-    </div>
-    <div
-      class="btn"
-      @click="submitUpdate"
-    >
-      ||UpdateTask||
-    </div>
-    <br><br>
-    <input
-      class=""
-      placeholder="Assignment files inspections"
-      type="text"
-      v-model="inspections"
-      v-if="ifRouteNameIs(['edit_assignment'])"
-    >
-    <br><br>
-    <div
-      class="btn"
-      @click="submitFilesToCheck"
-    >
-      ||UpdateFilesToCheck||
-    </div>
-    <br><br>
-    <div class="assignment-answer__group assignment-answer__group_submit">
-      <label
-        class="assignment-answer__label assignment-answer__label_file"
-        for="assignment-answer-file"
+  <CreateEditBlock
+    :theme="theme"
+  >
+    <TitleBlock
+      v-if="ifRouteNameIs(['create_assignment'])"
+    >Create Assignment</TitleBlock>
+    <TitleBlock
+      v-else
+    >Update Assignment</TitleBlock>
+    <form>
+      <SubtitleBlock>General Info</SubtitleBlock>
+      <input
+        placeholder="Assignment title"
+        type="text"
+        v-model="newAssignment.title"
       >
-        <span>Report File (.pdf )</span>
-        <div class="assignment-answer__subblock">
+      <textarea
+        class="create-edit__input_descr"
+        placeholder="Assignment description"
+        rows="5"
+        v-model="newAssignment.description"
+      ></textarea>
+      <div class="create-edit__input-group">
+        <input
+          class="create-edit__input_num"
+          placeholder="Max. grade"
+          type="number"
+          v-model="newAssignment.max_point"
+        >
+        <input
+          type="date"
+          v-model="newAssignment.start_date"
+        >
+        <input
+          type="date"
+          v-model="newAssignment.end_date"
+        >
+      </div>
+      <div class="create-edit__input-group create-edit__input-group_hints">
+        <span class="create-edit__input-hint_max-grade"></span>
+        <span>Start Date</span>
+        <span>End Date</span>
+      </div>
+      <div
+        class="create-edit__btn"
+        v-if="ifRouteNameIs(['create_assignment'])"
+        @click="submit"
+      >
+        Create Assignment
+      </div>
+      <div
+        class="create-edit__btn"
+        v-else
+        @click="submitUpdate"
+      >
+        Update Assignment
+      </div>
+    </form>
+    <form>
+      <SubtitleBlock>The Guidlines &amp; Requirements File</SubtitleBlock>
+      <label
+        class="create-edit__label create-edit__label_file"
+        for="create-edit-file"
+      >
+        <div class="create-edit__label-content">
           <img
-            :src="require(`@/assets/img/icons/file/file_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
+            :src="require(`@/assets/img/icons/file_add/file_add_${themeInfo.themeMode === 'light' ? 'b' : 'w'}.png`)"
             alt="add_file"
           >
           <span>{{ fileInfo.name }}</span>
         </div>
       </label>
       <input
-        class="assignment-answer__input assignment-answer__input_file"
-        id="assignment-answer-file"
-        name="assignment-answer-file"
+        class="create-edit__input_file"
+        id="create-edit-file"
+        name="create-edit-file"
         type="file"
         accept="application/pdf"
         @change="updateFileInfo"
       >
-    </div>
-    <br><br>
-    <div
-      class="btn"
-      @click="submitFile"
-    >
-      ||AddAssignmentFile||
-    </div>
-  </form>
+      <div
+        class="create-edit__btn"
+        @click="submitFile"
+      >
+        Save Guidelines
+      </div>
+    </form>
+    <form>
+      <SubtitleBlock>Files Inspections</SubtitleBlock>
+      <input
+        placeholder="Assignment files inspections"
+        type="text"
+        v-model="inspections"
+        v-if="ifRouteNameIs(['edit_assignment'])"
+      >
+      <p>Please fill in the files names separating them with ; sign only</p>
+      <div
+        class="create-edit__btn"
+        @click="submitFilesToCheck"
+      >
+        Submit Files To Inspect
+      </div>
+    </form>
+  </CreateEditBlock>
 </template>
 
 <script>
@@ -100,7 +110,9 @@ import StudentsAnswers from '@/components/StudentsAnswers.vue'
 import AssignmentAnswer from '@/components/AssignmentAnswer.vue'
 import {
   AssignmentBlock,
-  TitleBlock
+  TitleBlock,
+  CreateEditBlock,
+  SubtitleBlock
 } from "@/styles/styledBlocks.js"
 import axios from 'axios'
 import { mapGetters } from 'vuex'
@@ -110,19 +122,14 @@ import endpoints from "@/requests/endpoints"
 export default {
   name: 'Assignment',
   components: {
-    StudentsAnswers, AssignmentAnswer, AssignmentBlock, TitleBlock
+    StudentsAnswers, AssignmentAnswer, AssignmentBlock, TitleBlock, CreateEditBlock, SubtitleBlock
   },
   emits: ['toggle-overlay', 'toggle-alert'],
-  inject: ['theme', 'formatDate', 'ifRouteNameIs', 'goTo', 'themeInfo'],
+  inject: ['theme', 'formatDate', 'ifRouteNameIs', 'goTo', 'themeInfo', 'routeParams'],
   data() {
     return ({
       inspections: "",
       newAssignment: {
-        "title": "",
-        description: "",
-        "start_date": "",
-        "end_date": "",
-        "max_point": 0,
       },
       assignment: {
         "id": 1,
@@ -139,41 +146,52 @@ export default {
     updateCurrentGrade(grade) {
       this.currentGrade = grade
     },
+    async updateAssignment() {
+      await sendGET(
+        endpoints.assignmentTeacher(this.routeParams.courseID, this.routeParams.assignmentID),
+        {"Authorization": `Bearer ${this.getAccessToken}`}
+      )
+      .then(res => {
+        if (res) {
+          this.newAssignment = this.assignment = res
+          res.filesToCheck.forEach(file => 
+            this.inspections += file
+          )
+        }
+      })
+    },
     async submit() {
       await sendPOST(endpoints.createAssingment(this.$route.params.courseID), {"Authorization": `Bearer ${this.getAccessToken}`}, this.newAssignment)
       .then(res => {
         if (res.id) {
           console.log(res)
-          this.goTo({ name: 'course' })
+          this.goTo({ name: 'edit_assignment', params: { courseID: `${this.routeParams.courseID}`, assignmentID: `${res.id}` } })
         }
       })
     },
     async submitUpdate() {
-      let routeParams = this.$route.params
-      await sendPUT(endpoints.editAssingment(routeParams.courseID, routeParams.assignmentID), {"Authorization": `Bearer ${this.getAccessToken}`}, this.newAssignment)
+      await sendPUT(endpoints.editAssingment(this.routeParams.courseID, this.routeParams.assignmentID), {"Authorization": `Bearer ${this.getAccessToken}`}, this.newAssignment)
       .then(res => {
         if (res.successful_action) {
           console.log(res)
-          // this.goTo({ name: 'courses' })
+          this.updateAssignment()
         }
       })
     },
     async submitFilesToCheck() {
-      let routeParams = this.$route.params
-      await sendPOST(endpoints.filesToCheckAdd(routeParams.courseID, routeParams.assignmentID), {"Authorization": `Bearer ${this.getAccessToken}`}, this.getFilesToCheck)
+      await sendPOST(endpoints.filesToCheckAdd(this.routeParams.courseID, this.routeParams.assignmentID), {"Authorization": `Bearer ${this.getAccessToken}`}, this.getFilesToCheck)
       .then(res => {
         if (res.length > 0) {
           console.log(res)
-          // this.goTo({ name: 'courses' })
+          this.updateAssignment()
         }
       })
     },
     async submitFile() {
-      let routeParams = this.$route.params
       const formData = new FormData();
       formData.append('file', this.fileInfo);
 
-      axios.post(endpoints.uploadAssignmentFile(routeParams.courseID, routeParams.assignmentID), formData, {
+      axios.post(endpoints.uploadAssignmentFile(this.routeParams.courseID, this.routeParams.assignmentID), formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           "Authorization": `Bearer ${this.getAccessToken}`
@@ -181,6 +199,7 @@ export default {
       })
       .then(response => {
         console.log(response.data);
+        this.updateAssignment()
       })
       .catch(error => {
         console.error(error);
@@ -203,20 +222,8 @@ export default {
     },
   },
   async mounted() {
-    let routeParams = this.$route.params
     if (this.ifRouteNameIs(['edit_assignment']))
-      await sendGET(
-        endpoints.assignmentTeacher(routeParams.courseID, routeParams.assignmentID),
-        {"Authorization": `Bearer ${this.getAccessToken}`}
-      )
-      .then(res => {
-        if (res) {
-          this.newAssignment = this.assignment = res
-          res.filesToCheck.forEach(file => 
-            this.inspections += file
-          )
-        }
-      })
+      this.updateAssignment()
   }
 }
 

@@ -37,7 +37,12 @@ const routes = [
           },
           {
             path: 'user_:userID',
-            name: 'user',
+            name: 'user_profile',
+            component: () => import('../views/MainView.vue'),
+          },
+          {
+            path: 'lecturer',
+            name: 'lecturer_profile',
             component: () => import('../views/MainView.vue'),
           },
           {
@@ -87,6 +92,11 @@ const routes = [
   {
     path: '/settings',
     name: 'settings',
+    component: () => import('../views/MainView.vue')
+  },
+  {
+    path: '/gh-auth',
+    name: 'gh-auth',
     component: () => import('../views/MainView.vue')
   },
   {

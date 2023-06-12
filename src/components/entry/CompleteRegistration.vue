@@ -56,9 +56,6 @@
           Complete Registration
         </div>
       </form>
-      <!-- <div
-        @click="getGHAccessTocken"
-      >||| GitHub Auth |||</div> -->
     </div>
   </RegistrationBlock>
 </template>
@@ -104,39 +101,33 @@ export default {
   inject: ['ifRouteNameIs', 'goTo'],
   methods: {
     async register() {
-      await sendPOST(endpoints.completeRegistrationStudent, {"Authorization": `Bearer ${this.getAccessToken}`},
+      await sendPOST(
+        this.getUserIsStudent ?
+        endpoints.completeRegistrationStudent :
+        endpoints.completeRegistrationTeacher,
+        {"Authorization": `Bearer ${this.getAccessToken}`},
         this.getUserIsStudent ? {
-          "firstname": this.registrationData.name,
-          "lastname": this.registrationData.surname,
-          "email": this.registrationData.email,
-          "telegram_contact": this.registrationData.telegram,
-          //"birthday": this.registrationData.birthday
-        } : {
           "firstname": this.registrationData.name,
           "lastname": this.registrationData.surname,
           "group": this.registrationData.group,
           "email": this.registrationData.email,
           "telegram_contact": this.registrationData.telegram,
           "birthday": this.registrationData.birthday
+        } : {
+          "firstname": this.registrationData.name,
+          "lastname": this.registrationData.surname,
+          "email": this.registrationData.email,
+          "telegram_contact": this.registrationData.telegram,
+          "birthday": this.registrationData.birthday
         }
       )
       .then(res => {
-        if (res) {
+        if (res.id) {
           console.log('registration worked')
           this.goTo({ name: 'courses' })
         }
       })
     },
-    // async getGHAccessTocken() {
-    //   await sendGET("http://25.59.188.46:8080/api/v1/student/github/provide-access", {"Authorization": `Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0b2tlbi10eXBlIjoiYWNjZXNzLXRva2VuIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfU1RVREVOVCJ9XSwic3ViIjoiam9obiIsImlhdCI6MTY4NDY2NTQ3MCwiZXhwIjoxNjg1MjY1NDcwfQ.msVDXeBd4wetaaG_rwVjVb4zQW0nMgSTPPtg7J9THFA`}
-    //   )
-    //   .then(res => {
-    //     if (res) {
-    //       console.log(res)
-    //       // window.open(URL, "_target")
-    //     }
-    //   })
-    // }
   },
   computed: {
     ...mapGetters(['getUserIsStudent', 'getAccessToken']),

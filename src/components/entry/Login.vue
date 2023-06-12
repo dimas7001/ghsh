@@ -36,9 +36,6 @@
       >
         Register ⇛
       </div>
-      <!-- <div
-        @click="getGHAccessTocken"
-      >||| GitHub Auth |||</div> -->
     </div>
   </LoginBlock>
 </template>
@@ -69,9 +66,8 @@ export default {
     async login() {
       await sendPOST(endpoints.login, {}, this.loginData)
       .then(res => {
-        if (res) {
+        if (res.access_token) {
           this.SET_USER_TOKENS(res)
-          this.access_token = res.access_token
           this.getRole()
         }
       })
@@ -85,7 +81,7 @@ export default {
         }
       })
     },
-    // getGHAccessTocken() {
+    // getGHAccessToken() {
       // await sendGET("http://25.59.188.46:8080/api/v1/student/github/provide-access", {"Authorization": `Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0b2tlbi10eXBlIjoiYWNjZXNzLXRva2VuIiwiYXV0aG9yaXRpZXMiOlt7ImF1dGhvcml0eSI6IlJPTEVfU1RVREVOVCJ9XSwic3ViIjoiam9obiIsImlhdCI6MTY4NDY2NTQ3MCwiZXhwIjoxNjg1MjY1NDcwfQ.msVDXeBd4wetaaG_rwVjVb4zQW0nMgSTPPtg7J9THFA`}
       // )
       // .then(res => {

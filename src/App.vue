@@ -10,7 +10,9 @@
 </template>
 
 <script>
+  import { computed } from 'vue'
   // add function that gets values from localStorage, store a complete state in localStorage
+  
   export default {
     methods: {
       ifRouteNameIs(arr) {
@@ -28,12 +30,18 @@
         this.$router.push(here)
       },
       formatDate(date) {
-        return date.substring(0, 9).replaceAll('-','/')
+        if (date)
+          return date.substring(0, 10).replaceAll('-','/')
+        else
+          return ''
       },
     },
     computed: {
       getRoute() {
         return this.$route.name
+      },
+      routeParams() {
+        return this.$route.params
       },
     },
     provide() {
@@ -41,6 +49,7 @@
         ifRouteNameIs: this.ifRouteNameIs,
         goTo: this.goTo,
         formatDate: this.formatDate,
+        routeParams: computed(() => this.routeParams),
       }
     },
   }
@@ -105,4 +114,10 @@
     box-sizing: border-box
   [v-cloak]
     display: none
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button
+    -webkit-appearance: none
+    margin: 0
+  input[type=number]
+    -moz-appearance: textfield
 </style>

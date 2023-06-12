@@ -6,11 +6,12 @@
     <NewItemBlock
       :theme="theme"
       class="courses__create"
-      @click="addCourse"
+      @click="getUserIsStudent ? joinCourse() : addCourse()"
     />
     <div class="courses__wrapper">
       <div
         class="course"
+        :class="{'course_teacher': !getUserIsStudent}"
         v-for="course in currentCourses"
         :key="course.id"
         :id="course.id"
@@ -40,6 +41,7 @@
         >
           <div
             class="controls__edit"
+            v-if="!getUserIsStudent"
             @click.stop="this.goTo({ name: 'edit_course', params: { courseID: `${course.id}` } })"
           >
             <img
@@ -61,11 +63,6 @@
       <div class="course__no-items">
         You don't have any courses yet :(
       </div>
-      <input type="text" v-model="joinCourseID">
-        <span
-          v-if="getUserIsStudent"
-          @click="joinCourse"
-        >||join to course ||</span>
     </div>
   </CoursesBlock>
 </template>
@@ -82,8 +79,9 @@ export default {
     CoursesBlock, TitleBlock, NewItemBlock, Controls
   },
   props: {
+    coursesUpdateFlag: Number
   },
-  emits: [],
+  emits: ['toggle-overlay'],
   inject: ['theme', 'themeInfo', 'goTo', 'formatDate'],
   data() {
     return ({
@@ -201,11 +199,17 @@ export default {
     addCourse() {
       this.goTo({ name: 'create_course'})
     },
-    async joinCourse() {
-      await sendPOST(endpoints.joinCourse(this.joinCourseID), {"Authorization": `Bearer ${this.getAccessToken}`}, {})
+    joinCourse() {
+      this.$emit('toggle-overlay')
+    },
+    async uploadCourses() {
+      await sendGET(
+        this.getUserIsStudent ? endpoints.coursesStudent : endpoints.coursesTeacher,
+        {"Authorization": `Bearer ${this.getAccessToken}`}
+      )
       .then(res => {
-        if (res.successful_action) {
-          console.log('joined course')
+        if (res) {
+          this.courses = res
         }
       })
     },
@@ -217,15 +221,15 @@ export default {
     },
   },
   async mounted() {
-    await sendGET(
-      this.getUserIsStudent ? endpoints.coursesStudent : endpoints.coursesTeacher,
-      {"Authorization": `Bearer ${this.getAccessToken}`}
-    )
-    .then(res => {
-      if (res) {
-        this.courses = res
-      }
-    })
-  }
+    this.uploadCourses()
+  },
+  watch: {
+    coursesUpdateFlag: {
+      deep: true,
+      handler() {
+        this.uploadCourses()
+      },
+    },
+  },
 }
 </script>

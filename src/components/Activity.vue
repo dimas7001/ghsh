@@ -3,7 +3,6 @@
     :theme="theme"
   >
     <SubtitleBlock>Repo Activity Chart</SubtitleBlock>
-    <span v-html="chartData"></span>
     <canvas
       class="activity__chart"
       id="activityChart"
@@ -32,17 +31,22 @@ export default {
     return {
       chartInstance: '',
       chartContext: '',
+      chartData: [],
+      chartLabels: []
     }
   },
   inject: ['theme'],
   computed: {
     chartSettings() {
+      console.log(this.chartLabels)
+      console.log(this.chartData)
+
       return {
         type: 'line',
         data: {
-          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+          labels: ["5 days ago", "4 days ago", "3 days ago", "2 days ago", "1 day ago"],//this.chartLabels
           datasets: [{
-            data: [12, 19, 3, 5, 22, 13],
+            data: [2, 4, 3, 5, 1],//this.chartData
             borderWidth: 2,
             fill: true,
             cubicInterpolationMode: 'monotone',
@@ -103,22 +107,60 @@ export default {
         }
       }
     },
-    chartData() {
-      // let commitsArr = []
-      // this.repoActivity
-      //   .forEach(branch => commitsArr.push(...branch.commits))
+  },
+  methods: {
+    generateChartDataAndLabels() {
+      const intervalsAmount = 10,
+            msInDay = 1000 * 60 * 60 * 24
 
-      // let commitsDates = commitsArr
-      //   .map(commit => !commitsArr.some(commitInfo => commit === commitInfo))
+      let activity = this.repoActivity,
+          repoActivityEnd = new Date(activity[0].date),
+          repoActivityStart = new Date(activity[activity.length-1].date),
+          repoTimeframe = Math.ceil(Math.abs(repoActivityEnd - repoActivityStart) / msInDay / intervalsAmount),
+          caretIntervalEnd = new Date(repoActivityEnd.setHours(23,59,59,999)),
+          caretIntervalStart = new Date(this.deductDays(caretIntervalEnd, repoTimeframe + 1).setHours(0,0,0,0)),
+          data = [],
+          labels = [],
+          counter = 0
 
-      // commitsDates = commitsArr.sort()
+      for (let i = 0; i < intervalsAmount; i++) {
+        if (repoActivityStart > caretIntervalEnd) break
 
+        this.repoActivity.forEach(commit => {
+          let commitDate = new Date(commit.date)
 
-      // console.log(commitsDates)
-      return 1
+          if (commitDate > caretIntervalStart && commitDate <= caretIntervalEnd)
+            counter++
+        })
+
+        labels.push(`
+          ${caretIntervalStart.getDay()}
+          ${caretIntervalStart.toLocaleString('default', { month: 'long' }).slice(0, 3)}
+          ${`${caretIntervalStart.getFullYear()}`.slice(2, 4)}
+        `)
+        data.push(counter)
+        counter = 0
+
+        caretIntervalEnd = this.deductDays(caretIntervalEnd, repoTimeframe)
+        caretIntervalStart = this.deductDays(caretIntervalStart, repoTimeframe)
+      }
+
+      this.chartLabels = data
+      this.chartData = labels
+    },
+    addDays(date, days) {
+      let newDate = new Date(date)
+      newDate.setDate(date.getDate() + days);
+      return newDate;
+    },
+    deductDays(date, days) {
+      let newDate = new Date(date)
+      newDate.setDate(date.getDate() - days);
+      return newDate;
     },
   },
   mounted() {
+    this.generateChartDataAndLabels()
     this.chartContext = document.getElementById('activityChart')
     this.chartInstance = new Chart(this.chartContext, this.chartSettings)
   },
