@@ -46,5 +46,6 @@ export default {
   studentAnswer: (courseID, studentID, assignmentID) => `${domain}/api/v1/educator/course/${courseID}/student/${studentID}/task/${assignmentID}`,
   gradeAnswer: (courseID, studentID, assignmentID) => `${domain}/api/v1/educator/course/${courseID}/student/${studentID}/task/${assignmentID}`,
   courseStudents: (courseID) => `${domain}/api/v1/educator/course/${courseID}/students`,
-  courseStatistics: (courseID) => `${domain}/api/v1/educator/course/${courseID}/stats`,
+  courseStatisticsTeacher: (courseID) => `${domain}/api/v1/educator/course/${courseID}/stats`,
+  courseStatisticsStudent: (courseID) => `${domain}/api/v1/student/courses/${courseID}/stats`,
 }

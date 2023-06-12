@@ -14,6 +14,16 @@
           <span>{{ totalTasksCount }}</span>
         </div>
         <div class="statistics__hint">tasks submitted</div>
+        <br><br>
+        <div class="statistics__title">Cumulative grade</div>
+        <div class="statistics__percentage statistics__percentage_main">52%</div>
+        <div class="statistics__hint">of all points</div>
+        <div class="statistics__share statistics__share_main">
+          <span>24</span>
+          <span>/</span>
+          <span>46</span>
+        </div>
+        <div class="statistics__hint">points collected</div>
       </div>
 
       <div
@@ -25,7 +35,7 @@
         <div class="statistics__percentage">{{ taskAverage(passedTask) }}%</div>
         <div class="statistics__hint">average grade in %</div>
         <div class="statistics__share">
-          <span>{{ passedTask.point }}</span>
+          <span>{{ passedTask.point || 0 }}</span>
           <span>/</span>
           <span>{{passedTask.task.max_point }}</span>
         </div>
@@ -78,13 +88,15 @@ export default {
   methods: {
     async uploadStatistics() {
       await sendGET(
-        endpoints.courseStatistics(this.routeParams.courseID),
+        this.getUserIsStudent ?
+        endpoints.courseStatisticsStudent(this.routeParams.courseID) :
+        endpoints.courseStatisticsTeacher(this.routeParams.courseID),
         {"Authorization": `Bearer ${this.getAccessToken}`}
       )
       .then(res => {
-        if (res.total_tasks_count) {
+        if (res.total_tasks_count || res.tasks_count) {
           this.passedTasksInfo = res.passed_tasks
-          this.totalTasksCount = res.total_tasks_count
+          this.totalTasksCount = this.getUserIsStudent ? res.tasks_count : res.total_tasks_count
         }
       })
     },
@@ -97,16 +109,19 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['getAccessToken']),
+    ...mapGetters(['getAccessToken', 'getUserIsStudent']),
     courseProgress() {
       return Math.round(this.tasksPassed / this.totalTasksCount * 100)
     },
     tasksPassed() {
       let tasksTotal = 0
 
-      this.passedTasksInfo.forEach(task => {
-        tasksTotal += task.students_count
-      })
+      if (this.getUserIsStudent)
+        tasksTotal = this.passedTasksInfo.length
+      else
+        this.passedTasksInfo.forEach(task => {
+          tasksTotal += task.students_count
+        })
 
       return tasksTotal
     },
